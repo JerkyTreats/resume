@@ -1,0 +1,142 @@
+{
+  "header": {
+    "name": "JUSTIN NEARING",
+    "title": "Scaling Reliable Systems",
+    "location": "Burnaby",
+    "email": "justin.f.nearing@gmail.com",
+    "linkedin": "https://linkedin.com/in/justinnearing"
+  },
+  "sidebar": {
+    "photo": "justin_green.jpeg",
+    "summary": {
+      "title": "SUMMARY",
+      "content": "Platform Engineering Manager with over 15 years of experience.\n\nManaged fleets of Kubernetes clusters gracefully handling 14k RPS across 1400+ domains.\n\nManaged incredible Platform Infrastructure team ensuring reliable, secure, performant cloud infrastructure for global-scale services."
+    },
+    "skills": {
+      "title": "SKILLS",
+      "categories": [
+        {
+          "name": "Cloud Infrastructure",
+          "items": [
+            "Google Cloud (GCP) / AWS",
+            "Docker, Kubernetes (K8s)",
+            "ArgoCD, Helm, Terraform",
+            "MongoDB, SQL, Redis, Elasticsearch",
+            "Golang, Node.js, Python, Bash"
+          ]
+        },
+        {
+          "name": "SRE",
+          "items": [
+            "On-call triage, remediation, postmortem + prevention"
+          ]
+        },
+        {
+          "name": "Secrets/Access Management",
+          "items": [
+            "Cloud Security; Config Connector"
+          ]
+        },
+        {
+          "name": "Edge Compute/Cache",
+          "items": [
+            "Fastly + VCL, DNS, traffic shaping + bot management"
+          ]
+        },
+        {
+          "name": "Engineering Management",
+          "items": [
+            "Roadmap, project, capacity planning",
+            "Hiring, onboarding, managing direct reports",
+            "Presentations, reporting to upper management"
+          ]
+        },
+        {
+          "name": "General",
+          "items": [
+            "Advocate for cross-team communication, collaboration, alignment.",
+            "Strong believer in iterative improvement, data-driven decision making.",
+            "Genuine love for documentation."
+          ]
+        }
+      ]
+    }
+  },
+  "main": {
+    "experience": {
+      "title": "EXPERIENCE",
+      "jobs": [
+        {
+          "title": "Staff Platform Engineer",
+          "company": "VerticalScope Inc.",
+          "startDate": "05/2024",
+          "endDate": "06/2025",
+          "bullets": [
+            "Managed senior Platform Engineers to gracefully handle 14k RPS across 1400+ domains.",
+            "Developed core platform strategy of Security, Reliability, Developer Experience.",
+            "Led iterative improvement, data-driven decision-making, and metrics tracking.",
+            "Promoted blameless postmortem culture and consistent communication standards."
+          ],
+          "detailBlocks": [
+            {
+              "title": "Technical Details",
+              "items": [
+                "Edge infra @ 14k RPS / 1400+ domains, Fastly + VCL",
+                "Multi-cluster Kubernetes w/ Istio ingress, Helm, Terraform",
+                "GitOps via ArgoCD; SlackOps in Go; GitHub Actions",
+                "Monitoring: Prometheus, Grafana, Kibana, OTEL, Honeycomb",
+                "On-call rotation included"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Lead Software Engineer",
+          "company": "Kabam Games Inc.",
+          "startDate": "06/2017",
+          "endDate": "05/2023",
+          "bullets": [
+            "Led infra overhaul across 5 business critical products with 0 downtime",
+            "Scaled Unity backend infra for >1M MAU",
+            "Migrated VMs → Kubernetes; built CI/CD pipelines",
+            "Managed sensitive DB upgrades + SRE rotations"
+          ]
+        },
+        {
+          "title": "DevOps Lead",
+          "company": "LemonStand",
+          "startDate": "09/2016",
+          "endDate": "04/2017",
+          "bullets": [
+            "Overhauled local + Linux AWS environments",
+            "Streamlined dev onboarding and monitoring"
+          ]
+        },
+        {
+          "title": "Automation Engineer",
+          "company": "United Front Games",
+          "startDate": "07/2015",
+          "endDate": "05/2016",
+          "bullets": [
+            "Launched 20+ minute Unity builds in under 5 mins",
+            "Built one-step CI for AAA games"
+          ]
+        }
+      ]
+    }
+  },
+  "styling": {
+    "colors": {
+      "primary": "#2a6465",
+      "accent": "#1a4240",
+      "textPrimary": "#000000",
+      "textSecondary": "#6b7280",
+      "textAccent": "#0e7490"
+    },
+    "layout": {
+      "sidebarWidth": "1/3",
+      "mainWidth": "2/3",
+      "maxWidth": "5xl"
+    }
+  }
+}
