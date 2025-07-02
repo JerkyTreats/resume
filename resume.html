@@ -69,9 +69,9 @@
            :class="data ? `w-${data.styling.layout.sidebarWidth}` : 'w-1/3'"
            :style="`background-color: ${data?.styling?.colors?.primary || '#2a6465'}`">
         <!-- Sidebar Header -->
-        <div class="pt-6 px-6" x-show="data">
+        <div class="pt-6 px-6 pb-1.5" x-show="data">
           <!-- Photo -->
-          <div class="flex justify-center mb-8">
+          <div class="flex justify-center mb-9">
             <img :src="data.sidebar.photo" alt="Profile photo" class="w-28 rounded-full border-4 border-white" />
           </div>
         </div>
@@ -113,12 +113,28 @@
         <!-- Main Header -->
         <div class="pt-6 px-10" x-show="data">
           <h1 class="text-3xl font-bold" :style="`color: ${data?.styling?.colors?.textPrimary || '#000000'}`" x-text="data.header.name"></h1>
-          <p class="text-xl font-semibold" :style="`color: ${data?.styling?.colors?.textAccent || '#0e7490'}`" x-text="data.header.title"></p>
-          <p class="text-sm mt-2" :style="`color: ${data?.styling?.colors?.textSecondary || '#6b7280'}`">
-            📧 <span x-text="data.header.email"></span> &nbsp;&nbsp;🔗
-            <a :href="data.header.linkedin" :style="`color: ${data?.styling?.colors?.textAccent || '#0e7490'}`" class="underline" x-text="data.header.linkedin.replace('https://', '')"></a>
-            <br />📍 <span x-text="data.header.location"></span>
-          </p>
+          <p class="text-xl font-semibold italic" :style="`color: ${data?.styling?.colors?.textAccent || '#0e7490'}`" x-text="data.header.title"></p>
+          <div class="text-sm mt-2" :style="`color: ${data?.styling?.colors?.textSecondary || '#6b7280'}`">
+            <div class="flex gap-12">
+              <!-- Column 1: Email and Location -->
+              <div class="space-y-2">
+                <div>📧 <span x-text="data.header.email"></span></div>
+                <div>📍 <span x-text="data.header.location"></span></div>
+              </div>
+              <!-- Column 2: LinkedIn and GitHub -->
+              <div class="space-y-2">
+                <div>🔗 <a :href="data.header.linkedin" :style="`color: ${data?.styling?.colors?.textAccent || '#0e7490'}`" class="underline">LinkedIn</a></div>
+                <div>💻 <a :href="data.header.github" :style="`color: ${data?.styling?.colors?.textAccent || '#0e7490'}`" class="underline">GitHub</a></div>
+              </div>
+              <!-- Column 3: Website and Phone -->
+              <div class="space-y-2">
+                <div>🌐 <a :href="data.header.website" :style="`color: ${data?.styling?.colors?.textAccent || '#0e7490'}`" class="underline" x-text="data.header.website.replace('https://', '')"></a></div>
+                <template x-if="data.header.phone && data.header.phone.trim() !== ''">
+                  <div>📞 <span x-text="data.header.phone"></span></div>
+                </template>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Main Content Block -->
