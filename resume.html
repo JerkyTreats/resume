@@ -160,7 +160,6 @@
               <div class="grid grid-cols-1 gap-y-4 text-sm mt-2">
                 <template x-for="category in data.sidebar.skills.categories" :key="category.name">
                   <div>
-                    <strong x-text="category.name + ':'"></strong>
                     <div class="markdown-content mt-1" x-html="getSkillContent(category.markdownPath)"></div>
                   </div>
                 </template>
