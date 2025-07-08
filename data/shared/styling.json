@@ -1,0 +1,14 @@
+{
+  "colors": {
+    "primary": "#2a6465",
+    "accent": "#1a4240",
+    "textPrimary": "#000000",
+    "textSecondary": "#6b7280",
+    "textAccent": "#0e7490"
+  },
+  "layout": {
+    "sidebarWidth": "1/3",
+    "mainWidth": "2/3",
+    "maxWidth": "5xl"
+  }
+}

@@ -1,16 +1,7 @@
 {
-  "header": {
-    "name": "JUSTIN NEARING",
-    "title": "Scaling Reliable Systems",
-    "location": "Vancouver, BC",
-    "email": "justin@jerkytreats.dev",
-    "linkedin": "https://linkedin.com/in/justinnearing",
-    "github": "https://github.com/jerkytreats",
-    "website": "https://jerkytreats.dev",
-    "phone": ""
-  },
+  "$schema": "../shared/schemas/resume-schema.json",
   "sidebar": {
-    "photo": "justin_green.jpeg",
+    "photo": "shared/assets/justin_green.jpeg",
     "summary": {
       "title": "SUMMARY",
       "markdownPath": "summary/summary.md"
@@ -19,24 +10,24 @@
       "title": "SKILLS",
       "categories": [
         {
+          "name": "AI/ML Infrastructure",
+          "markdownPath": "skills/ai-ml-infrastructure.md"
+        },
+        {
           "name": "Cloud Infrastructure",
           "markdownPath": "skills/cloud-infrastructure.md"
-        },
-        {
-          "name": "SRE",
-          "markdownPath": "skills/sre.md"
-        },
-        {
-          "name": "Secrets/Access Management",
-          "markdownPath": "skills/secrets-access-management.md"
         },
         {
           "name": "Edge Compute/Cache",
           "markdownPath": "skills/edge-compute-cache.md"
         },
         {
-          "name": "Engineering Management",
-          "markdownPath": "skills/engineering-management.md"
+          "name": "Secrets/Access Management",
+          "markdownPath": "skills/secrets-access-management.md"
+        },
+        {
+          "name": "SRE",
+          "markdownPath": "skills/sre.md"
         },
         {
           "name": "General",
@@ -78,20 +69,6 @@
           "markdownPath": "experience/automation-engineer-united-front-games.md"
         }
       ]
-    }
-  },
-  "styling": {
-    "colors": {
-      "primary": "#2a6465",
-      "accent": "#1a4240",
-      "textPrimary": "#000000",
-      "textSecondary": "#6b7280",
-      "textAccent": "#0e7490"
-    },
-    "layout": {
-      "sidebarWidth": "1/3",
-      "mainWidth": "2/3",
-      "maxWidth": "5xl"
     }
   }
 }

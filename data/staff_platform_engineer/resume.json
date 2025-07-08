@@ -1,0 +1,74 @@
+{
+  "$schema": "../shared/schemas/resume-schema.json",
+  "sidebar": {
+    "photo": "shared/assets/justin_green.jpeg",
+    "summary": {
+      "title": "SUMMARY",
+      "markdownPath": "summary/summary.md"
+    },
+    "skills": {
+      "title": "SKILLS",
+      "categories": [
+        {
+          "name": "Cloud Infrastructure",
+          "markdownPath": "skills/cloud-infrastructure.md"
+        },
+        {
+          "name": "SRE",
+          "markdownPath": "skills/sre.md"
+        },
+        {
+          "name": "Secrets/Access Management",
+          "markdownPath": "skills/secrets-access-management.md"
+        },
+        {
+          "name": "Edge Compute/Cache",
+          "markdownPath": "skills/edge-compute-cache.md"
+        },
+        {
+          "name": "Engineering Management",
+          "markdownPath": "skills/engineering-management.md"
+        },
+        {
+          "name": "General",
+          "markdownPath": "skills/general.md"
+        }
+      ]
+    }
+  },
+  "main": {
+    "experience": {
+      "title": "EXPERIENCE",
+      "jobs": [
+        {
+          "title": "Staff Platform Engineer",
+          "company": "VerticalScope Inc.",
+          "startDate": "05/2024",
+          "endDate": "06/2025",
+          "markdownPath": "experience/staff-platform-engineer-verticalscope.md"
+        },
+        {
+          "title": "Lead Software Engineer",
+          "company": "Kabam Games Inc.",
+          "startDate": "06/2017",
+          "endDate": "05/2023",
+          "markdownPath": "experience/lead-software-engineer-kabam.md"
+        },
+        {
+          "title": "DevOps Lead",
+          "company": "LemonStand",
+          "startDate": "09/2016",
+          "endDate": "04/2017",
+          "markdownPath": "experience/devops-lead-lemonstand.md"
+        },
+        {
+          "title": "Automation Engineer",
+          "company": "United Front Games",
+          "startDate": "07/2015",
+          "endDate": "05/2016",
+          "markdownPath": "experience/automation-engineer-united-front-games.md"
+        }
+      ]
+    }
+  }
+}

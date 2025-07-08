@@ -132,11 +132,11 @@ See `.agent/resume_dashboard.md` for dashboard requirements.
 
 | Phase | Task | Description | Status |
 |-------|------|-------------|--------|
-| 1 | Schema Design | Create JSON schema for resume structure with validation rules | TODO |
-| 2 | Directory Restructure | Create new directory structure with `data/` folder and resume type subdirectories | TODO |
-| 3 | Shared Assets Setup | Move and organize shared assets (header, styling, images) to `data/shared/` | TODO |
-| 4 | Resume Type Creation | Create initial resume types (eng_mgr, ai_lead) with basic structure | TODO |
-| 5 | Content Migration | Migrate existing content from current structure to new multi-resume format | TODO |
+| 1 | Schema Design | Create JSON schema for resume structure with validation rules | ✅ COMPLETE |
+| 2 | Directory Restructure | Create new directory structure with `data/` folder and resume type subdirectories | ✅ COMPLETE |
+| 3 | Shared Assets Setup | Move and organize shared assets (header, styling, images) to `data/shared/` | ✅ COMPLETE |
+| 4 | Resume Type Creation | Create initial resume types (eng_mgr, ai_lead) with basic structure | ✅ COMPLETE |
+| 5 | Content Migration | Migrate existing content from current structure to new multi-resume format | ✅ COMPLETE |
 | 6 | Template Updates | Update `resume.html` to work with new directory structure and JSON schema | TODO |
 | 7 | Validation Setup | Implement VSCode schema validation and CI linting | TODO |
 | 8 | Testing & Refinement | Test all resume types and refine content for each variant | TODO |

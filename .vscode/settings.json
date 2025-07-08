@@ -1,0 +1,11 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": ["data/*/resume.json"],
+      "url": "./data/shared/schemas/resume-schema.json"
+    }
+  ],
+  "json.validate.enable": true,
+  "json.format.enable": true,
+  "json.schemaDownload.enable": true
+}

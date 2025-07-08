@@ -1,0 +1,73 @@
+name: Validate Resume Schema
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'data/**/*.json'
+      - 'data/shared/schemas/*.json'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'data/**/*.json'
+      - 'data/shared/schemas/*.json'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install ajv-cli
+      run: npm install -g ajv-cli
+
+    - name: Validate resume.json files
+      run: |
+        echo "Validating resume schema..."
+
+        # Find all resume.json files in data subdirectories
+        for file in data/*/resume.json; do
+          if [ -f "$file" ]; then
+            echo "Validating $file..."
+            ajv validate -s data/shared/schemas/resume-schema.json -d "$file"
+            if [ $? -eq 0 ]; then
+              echo "✅ $file is valid"
+            else
+              echo "❌ $file is invalid"
+              exit 1
+            fi
+          fi
+        done
+
+        echo "✅ All resume.json files are valid!"
+
+    - name: Validate shared JSON files
+      run: |
+        echo "Validating shared JSON files..."
+
+        # Validate header.json
+        echo "Validating data/shared/header.json..."
+        if jq empty data/shared/header.json; then
+          echo "✅ header.json is valid JSON"
+        else
+          echo "❌ header.json is invalid JSON"
+          exit 1
+        fi
+
+        # Validate styling.json
+        echo "Validating data/shared/styling.json..."
+        if jq empty data/shared/styling.json; then
+          echo "✅ styling.json is valid JSON"
+        else
+          echo "❌ styling.json is invalid JSON"
+          exit 1
+        fi
+
+        echo "✅ All shared JSON files are valid!"
