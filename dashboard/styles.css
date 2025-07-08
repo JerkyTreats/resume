@@ -1,9 +1,4 @@
-/* Reset and base styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* Dashboard-specific styles */
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -24,7 +19,7 @@ body {
 
 /* Header styles */
 .header {
-    padding: 60px 0 40px;
+    padding: 40px 0 40px;
     text-align: center;
 }
 

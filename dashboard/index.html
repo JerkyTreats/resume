@@ -4,12 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume Dashboard - Justin Nearing</title>
+    <link rel="stylesheet" href="../styles/shared.css">
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+        <!-- Navigation Component -->
+    <nav class="nav-component no-print">
+      <div class="nav-container">
+        <div class="nav-content">
+          <div class="nav-brand">
+            <a href="/dashboard" class="nav-logo">
+              <span class="nav-title">Resume Dashboard</span>
+            </a>
+          </div>
+
+          <div class="nav-links">
+            <a href="/dashboard" class="nav-link" id="nav-dashboard">
+              <span class="nav-icon">📊</span>
+              Dashboard
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
     <div class="container">
         <header class="header">
             <div class="header-content">
@@ -41,5 +62,21 @@
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // Set active navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+
+            // Remove all active classes
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Set active class based on current page
+            if (currentPath === '/dashboard' || currentPath === '/') {
+                document.getElementById('nav-dashboard').classList.add('active');
+            }
+        });
+    </script>
 </body>
 </html>

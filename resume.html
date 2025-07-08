@@ -7,10 +7,30 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="styles/shared.css">
     <link rel="stylesheet" href="resume.css">
   </head>
   <body class="bg-gray-50 font-sans text-gray-900" x-data="resumeData()">
 
+    <!-- Navigation Component -->
+    <nav class="nav-component no-print">
+      <div class="nav-container">
+        <div class="nav-content">
+          <div class="nav-brand">
+            <a href="/dashboard" class="nav-logo">
+              <span class="nav-title">Resume Dashboard</span>
+            </a>
+          </div>
+
+          <div class="nav-links">
+            <a href="/dashboard" class="nav-link" id="nav-dashboard">
+              <span class="nav-icon">📊</span>
+              Dashboard
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
 
     <!-- Loading State -->
     <div x-show="loading" class="loading-state flex justify-center items-center min-h-screen">
@@ -274,6 +294,23 @@
           }
         }
       }
+    </script>
+
+    <script>
+      // Set active navigation
+      document.addEventListener('DOMContentLoaded', function() {
+        const currentPath = window.location.pathname;
+
+        // Remove all active classes
+        document.querySelectorAll('.nav-link').forEach(link => {
+          link.classList.remove('active');
+        });
+
+        // Set active class based on current page
+        if (currentPath === '/dashboard' || currentPath === '/') {
+          document.getElementById('nav-dashboard').classList.add('active');
+        }
+      });
     </script>
   </body>
 </html>
