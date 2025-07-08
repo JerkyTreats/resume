@@ -1,0 +1,40 @@
+# Use Node.js 24.3.0 as base image for development
+FROM node:24.3.0-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies for Puppeteer
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    freetype-dev \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    curl
+
+# Set Puppeteer to use installed Chromium
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser \
+    PORT=3300
+
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies (including dev dependencies)
+RUN npm ci && npm cache clean --force
+
+# Create directory for generated PDFs
+RUN mkdir -p generated-pdfs
+
+# Expose dynamic port
+EXPOSE $PORT
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:$PORT/api/health || exit 1
+
+# Start the development server with nodemon
+CMD ["npm", "run", "dev"]

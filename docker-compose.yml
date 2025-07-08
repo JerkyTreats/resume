@@ -1,0 +1,51 @@
+# Docker Compose configuration for Resume PDF Generation Server
+
+services:
+  # Development server with volume mounting for live code changes
+  server-dev:
+    build:
+      context: .
+      dockerfile: server/Dockerfile.dev
+    ports:
+      - "${SERVER_PORT:-3000}:${SERVER_PORT:-3000}"
+    volumes:
+      # Mount source code for live reloading
+      - .:/app
+      - /app/node_modules
+      - /app/server/node_modules
+      # Use named volume for generated PDFs
+      - generated-pdfs:/app/generated-pdfs
+    environment:
+      - NODE_ENV=development
+      - PORT=${SERVER_PORT:-3000}
+      - BASE_URL=http://localhost:${SERVER_PORT:-3000}
+    networks:
+      - resume-network
+    profiles:
+      - dev
+
+  # Production server
+  server-prod:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    ports:
+      - "${SERVER_PORT:-3000}:${SERVER_PORT:-3000}"
+    volumes:
+      # Use named volume for generated PDFs
+      - generated-pdfs:/app/generated-pdfs
+    environment:
+      - NODE_ENV=production
+      - PORT=${SERVER_PORT:-3000}
+      - BASE_URL=http://localhost:${SERVER_PORT:-3000}
+    networks:
+      - resume-network
+    profiles:
+      - prod
+
+networks:
+  resume-network:
+    driver: bridge
+
+volumes:
+  generated-pdfs:
