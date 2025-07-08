@@ -21,6 +21,15 @@
   --error-primary: #e53e3e;
   --success-primary: #38a169;
   --warning-primary: #d69e2e;
+
+  /* Resume-specific colors - always light mode */
+  --resume-bg: #ffffff;
+  --resume-text-primary: #000000;
+  --resume-text-secondary: #4a5568;
+  --resume-text-tertiary: #6b7280;
+  --resume-text-muted: #a0aec0;
+  --resume-accent: #0e7490;
+  --resume-title: #1f2937;
 }
 
 /* Dark mode colors */
@@ -43,6 +52,15 @@
   --error-primary: #fc8181;
   --success-primary: #68d391;
   --warning-primary: #f6e05e;
+
+  /* Resume colors remain the same in dark mode */
+  --resume-bg: #ffffff;
+  --resume-text-primary: #000000;
+  --resume-text-secondary: #4a5568;
+  --resume-text-tertiary: #6b7280;
+  --resume-text-muted: #a0aec0;
+  --resume-accent: #0e7490;
+  --resume-title: #1f2937;
 }
 
 /* System preference detection */
@@ -66,6 +84,15 @@
     --error-primary: #fc8181;
     --success-primary: #68d391;
     --warning-primary: #f6e05e;
+
+    /* Resume colors remain the same */
+    --resume-bg: #ffffff;
+    --resume-text-primary: #000000;
+    --resume-text-secondary: #4a5568;
+    --resume-text-tertiary: #6b7280;
+    --resume-text-muted: #a0aec0;
+    --resume-accent: #0e7490;
+    --resume-title: #1f2937;
   }
 }
 
@@ -175,6 +202,68 @@
   height: 18px;
 }
 
+/* PDF Button in Navigation Styles */
+.pdf-button-nav {
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pdf-button-nav:hover:not(:disabled) {
+  background: rgba(102, 126, 234, 0.1) !important;
+  color: #667eea !important;
+  transform: translateY(-1px);
+}
+
+.pdf-button-nav:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.nav-link-content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-icon--spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* PDF Button States in Navigation */
+.pdf-button-nav--loading {
+  background: rgba(245, 158, 11, 0.1) !important;
+  color: #f59e0b !important;
+}
+
+.pdf-button-nav--loading:hover:not(:disabled) {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #d97706 !important;
+}
+
+.pdf-button-nav--error {
+  background: rgba(239, 68, 68, 0.1) !important;
+  color: #ef4444 !important;
+}
+
+.pdf-button-nav--error:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #dc2626 !important;
+}
+
+
+
 /* PDF Exclusion - Navigation will be hidden in PDF output */
 @media print {
   .no-print {
@@ -204,6 +293,11 @@
   .nav-title {
     font-size: 1.1rem;
   }
+
+  .pdf-button-nav {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -216,6 +310,19 @@
     justify-content: center;
     width: 100%;
     padding: 8px 12px;
+  }
+
+  .pdf-button-nav {
+    padding: 8px 12px;
+    font-size: 0.75rem;
+  }
+
+  .pdf-button-nav span:last-child {
+    display: none;
+  }
+
+  .pdf-button-nav .nav-icon {
+    font-size: 1.2rem;
   }
 }
 
@@ -281,210 +388,4 @@ body {
 /* Smooth transitions for theme changes */
 * {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Resume Content - Completely Independent of Theme */
-/* Force resume content to use light mode colors regardless of theme */
-.resume-content {
-  color-scheme: light !important;
-  background-color: #ffffff !important;
-}
-
-/* Override any inherited colors in resume content */
-.resume-content * {
-  color-scheme: light !important;
-}
-
-/* Force specific text colors for resume content */
-.resume-content .text-gray-900,
-.resume-content .text-gray-800,
-.resume-content .text-gray-700,
-.resume-content .text-gray-600,
-.resume-content .text-gray-500,
-.resume-content .text-gray-400,
-.resume-content .text-gray-300,
-.resume-content .text-gray-200,
-.resume-content .text-gray-100,
-.resume-content .text-black {
-  color: #000000 !important;
-}
-
-.resume-content .text-white {
-  color: #ffffff !important;
-}
-
-/* Ensure markdown content is readable */
-.resume-content .markdown-content,
-.resume-content .markdown-content * {
-  color: #000000 !important;
-}
-
-/* Override any CSS variables that might affect resume content */
-.resume-content {
-  --text-primary: #000000 !important;
-  --text-secondary: #4a5568 !important;
-  --text-tertiary: #718096 !important;
-  --text-muted: #a0aec0 !important;
-}
-
-/* Ensure sidebar text is always white */
-.resume-content .text-white,
-.resume-content .text-white * {
-  color: #ffffff !important;
-}
-
-/* Force sidebar content to be white */
-.resume-content [class*="text-white"] {
-  color: #ffffff !important;
-}
-
-/* Ensure job titles and dates have proper styling */
-.resume-content h3.font-semibold {
-  font-weight: 600 !important;
-}
-
-.resume-content p.text-sm {
-  color: #6b7280 !important;
-}
-
-/* Ensure all text elements in resume content have proper colors */
-.resume-content h1,
-.resume-content h2,
-.resume-content h4,
-.resume-content h5,
-.resume-content h6 {
-  color: #000000 !important;
-}
-
-.resume-content p {
-  color: #000000 !important;
-}
-
-/* Override for specific text sizes */
-.resume-content .text-sm {
-  color: #6b7280 !important;
-}
-
-.resume-content .text-base {
-  color: #000000 !important;
-}
-
-.resume-content .text-md {
-  color: #000000 !important;
-}
-
-/* Preserve company name accent color */
-.resume-content p.text-base.font-medium {
-  color: #0e7490 !important;
-}
-
-/* Job titles should be dark gray */
-.resume-content h3.font-semibold {
-  color: #1f2937 !important;
-  font-weight: 600 !important;
-}
-
-/* More specific rule for job titles with text-md class */
-.resume-content h3.font-semibold.text-md {
-  color: #1f2937 !important;
-  font-weight: 600 !important;
-}
-
-/* Even more specific rule to override any other styles */
-.resume-content div.flex.justify-between div h3.font-semibold.text-md {
-  color: #1f2937 !important;
-  font-weight: 600 !important;
-}
-
-/* Ensure header title displays in teal */
-.resume-content p.text-xl.font-semibold.italic {
-  color: #0e7490 !important;
-}
-
-/* Make header name (Justin Nearing) dark gray instead of pure black */
-.resume-content h1.text-3xl.font-bold {
-  color: #1f2937 !important;
-}
-
-/* PDF Button in Navigation Styles */
-.pdf-button-nav {
-  background: transparent !important;
-  border: none !important;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.pdf-button-nav:hover:not(:disabled) {
-  background: rgba(102, 126, 234, 0.1) !important;
-  color: #667eea !important;
-  transform: translateY(-1px);
-}
-
-.pdf-button-nav:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.nav-link-content {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.nav-icon--spinning {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* PDF Button States in Navigation */
-.pdf-button-nav--loading {
-  background: rgba(245, 158, 11, 0.1) !important;
-  color: #f59e0b !important;
-}
-
-.pdf-button-nav--loading:hover:not(:disabled) {
-  background: rgba(245, 158, 11, 0.2) !important;
-  color: #d97706 !important;
-}
-
-.pdf-button-nav--error {
-  background: rgba(239, 68, 68, 0.1) !important;
-  color: #ef4444 !important;
-}
-
-.pdf-button-nav--error:hover:not(:disabled) {
-  background: rgba(239, 68, 68, 0.2) !important;
-  color: #dc2626 !important;
-}
-
-/* Responsive design for PDF button in navigation */
-@media (max-width: 768px) {
-  .pdf-button-nav {
-    padding: 6px 12px;
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .pdf-button-nav {
-    padding: 8px 12px;
-    font-size: 0.75rem;
-  }
-
-  .pdf-button-nav span:last-child {
-    display: none;
-  }
-
-  .pdf-button-nav .nav-icon {
-    font-size: 1.2rem;
-  }
 }
