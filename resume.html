@@ -9,6 +9,7 @@
         <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="styles/shared.css">
     <link rel="stylesheet" href="resume.css">
+    <script src="scripts/theme-manager.js"></script>
   </head>
   <body class="bg-gray-50 font-sans text-gray-900" x-data="resumeData()">
 
@@ -27,13 +28,33 @@
               <span class="nav-icon">📊</span>
               Dashboard
             </a>
+            <!-- Save PDF Button - Only shows on resume pages -->
+            <button
+              @click="generatePDF()"
+              :disabled="pdfGenerating"
+              class="nav-link pdf-button-nav"
+              :class="{ 'pdf-button-nav--loading': pdfGenerating, 'pdf-button-nav--error': pdfError }"
+            >
+              <span x-show="!pdfGenerating && !pdfError" class="nav-link-content">
+                <span class="nav-icon">📄</span>
+                <span>Save PDF</span>
+              </span>
+              <span x-show="pdfGenerating" class="nav-link-content">
+                <span class="nav-icon nav-icon--spinning">⏳</span>
+                <span>Generating...</span>
+              </span>
+              <span x-show="pdfError" class="nav-link-content">
+                <span class="nav-icon">⚠️</span>
+                <span>Retry</span>
+              </span>
+            </button>
           </div>
         </div>
       </div>
     </nav>
 
     <!-- Loading State -->
-    <div x-show="loading" class="loading-state flex justify-center items-center min-h-screen">
+    <div x-show="loading" class="resume-content loading-state flex justify-center items-center min-h-screen">
       <div class="text-center">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-700 mx-auto"></div>
         <p class="mt-4 text-gray-600">Loading resume data...</p>
@@ -41,7 +62,7 @@
     </div>
 
     <!-- Error State -->
-    <div x-show="error" class="error-state flex justify-center items-center min-h-screen">
+    <div x-show="error" class="resume-content error-state flex justify-center items-center min-h-screen">
       <div class="text-center">
         <div class="text-red-600 text-xl mb-2">⚠️ Error Loading Resume</div>
         <p class="text-gray-600 mb-4" x-text="error"></p>
@@ -52,9 +73,9 @@
     </div>
 
     <!-- Resume Content -->
-    <div x-show="!loading && !error" class="flex mx-auto bg-white shadow-lg relative"
+    <div x-show="!loading && !error" class="resume-content flex mx-auto bg-white shadow-lg relative"
          :class="data ? `max-w-${data.styling.layout.maxWidth}` : 'max-w-5xl'">
-      <!-- Dark top trim -->
+            <!-- Dark top trim -->
       <div class="absolute top-0 left-0 w-full h-4 z-10" :style="`background-color: ${data?.styling?.colors?.accent || '#1a4240'}`"></div>
 
       <!-- Sidebar -->
@@ -149,6 +170,23 @@
     </div>
 
     <script>
+        // Set active navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+
+            // Remove all active classes
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Set active class based on current page
+            if (currentPath === '/dashboard' || currentPath === '/') {
+                document.getElementById('nav-dashboard').classList.add('active');
+            }
+        });
+    </script>
+
+    <script>
       // Configure marked.js for proper markdown rendering
       marked.setOptions({
         breaks: true,  // Convert \n to <br>
@@ -164,6 +202,9 @@
           error: null,
           markdownCache: {},
           currentResumeType: 'staff_platform_engineer',
+          // PDF Generation State
+          pdfGenerating: false,
+          pdfError: false,
 
           getResumeTypeFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -172,8 +213,6 @@
             const validTypes = ['staff_platform_engineer', 'eng_mgr', 'ai_lead'];
             return validTypes.includes(type) ? type : 'staff_platform_engineer';
           },
-
-
 
           async init() {
             try {
@@ -218,8 +257,6 @@
               this.loading = false;
             }
           },
-
-
 
           async loadAllMarkdown() {
             // Load summary
@@ -291,6 +328,89 @@
 
             // Simply render the markdown content as-is
             return marked.parse(content);
+          },
+
+          // PDF Generation Methods
+          async generatePDF() {
+            try {
+              this.pdfGenerating = true;
+              this.pdfError = false;
+
+              // For now, we'll use browser's built-in print functionality
+              // This will be replaced with server-side PDF generation in Phase 3
+              await this.generatePDFWithPrint();
+
+            } catch (error) {
+              console.error('PDF generation failed:', error);
+              this.pdfError = true;
+              this.pdfGenerating = false;
+            }
+          },
+
+          async generatePDFWithPrint() {
+            return new Promise((resolve, reject) => {
+              // Wait a moment for any pending DOM updates
+              setTimeout(() => {
+                try {
+                  // Use browser's print functionality as a temporary solution
+                  window.print();
+                  this.pdfGenerating = false;
+                  resolve();
+                } catch (error) {
+                  reject(error);
+                }
+              }, 100);
+            });
+          },
+
+          // Future method for server-side PDF generation (Phase 3)
+          async generatePDFWithServer() {
+            try {
+              const response = await fetch('/api/generate-pdf', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  resumeType: this.currentResumeType,
+                  options: {
+                    width: '8.5in',
+                    height: 'auto',
+                    printBackground: true,
+                    margin: {
+                      top: '0.25in',
+                      right: '0.25in',
+                      bottom: '0.25in',
+                      left: '0.25in'
+                    },
+                    preferCSSPageSize: false,
+                    pageRanges: '1',
+                    scale: 1.0
+                  }
+                })
+              });
+
+              if (!response.ok) {
+                throw new Error(`PDF generation failed: ${response.status}`);
+              }
+
+              const result = await response.json();
+
+              if (result.success && result.pdfUrl) {
+                // Trigger download
+                const link = document.createElement('a');
+                link.href = result.pdfUrl;
+                link.download = `resume-${this.currentResumeType}.pdf`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              } else {
+                throw new Error(result.error || 'PDF generation failed');
+              }
+
+            } catch (error) {
+              throw error;
+            }
           }
         }
       }

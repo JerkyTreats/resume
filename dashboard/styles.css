@@ -1,11 +1,12 @@
-/* Dashboard-specific styles */
+/* Dashboard-specific styles with Dark Mode Support */
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     line-height: 1.6;
-    color: #333;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: var(--text-primary);
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
     min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 .container {
@@ -24,20 +25,21 @@ body {
 }
 
 .header-content {
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--bg-secondary);
     backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 40px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px var(--shadow-primary);
+    border: 1px solid var(--border-primary);
+    transition: all 0.3s ease;
 }
 
 .title {
     font-size: 3rem;
     font-weight: 700;
-    color: #2d3748;
+    color: var(--text-primary);
     margin-bottom: 10px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -45,7 +47,7 @@ body {
 
 .subtitle {
     font-size: 1.2rem;
-    color: #718096;
+    color: var(--text-tertiary);
     font-weight: 400;
 }
 
@@ -64,12 +66,12 @@ body {
 }
 
 .resume-card {
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--bg-secondary);
     backdrop-filter: blur(10px);
     border-radius: 16px;
     padding: 30px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px var(--shadow-primary);
+    border: 1px solid var(--border-primary);
     transition: all 0.3s ease;
     cursor: pointer;
     text-decoration: none;
@@ -79,8 +81,8 @@ body {
 
 .resume-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
-    border-color: rgba(102, 126, 234, 0.3);
+    box-shadow: 0 16px 48px var(--shadow-secondary);
+    border-color: var(--accent-active);
 }
 
 .resume-card:active {
@@ -90,7 +92,7 @@ body {
 .resume-type {
     font-size: 0.9rem;
     font-weight: 600;
-    color: #667eea;
+    color: var(--accent-primary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 8px;
@@ -99,26 +101,26 @@ body {
 .resume-title {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #2d3748;
+    color: var(--text-primary);
     margin-bottom: 8px;
 }
 
 .resume-subtitle {
     font-size: 1rem;
-    color: #718096;
+    color: var(--text-tertiary);
     margin-bottom: 20px;
 }
 
 .resume-description {
     font-size: 0.9rem;
-    color: #a0aec0;
+    color: var(--text-muted);
     line-height: 1.5;
 }
 
 .resume-meta {
     margin-top: 20px;
     padding-top: 20px;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid var(--border-secondary);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -126,11 +128,11 @@ body {
 
 .resume-date {
     font-size: 0.8rem;
-    color: #a0aec0;
+    color: var(--text-muted);
 }
 
 .view-btn {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
     color: white;
     border: none;
     padding: 8px 16px;
@@ -143,7 +145,7 @@ body {
 
 .view-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 12px var(--accent-active);
 }
 
 /* Loading spinner */
@@ -155,8 +157,8 @@ body {
 .spinner {
     width: 40px;
     height: 40px;
-    border: 4px solid #e2e8f0;
-    border-top: 4px solid #667eea;
+    border: 4px solid var(--border-secondary);
+    border-top: 4px solid var(--accent-primary);
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin: 0 auto 20px;
@@ -168,7 +170,7 @@ body {
 }
 
 .loading p {
-    color: #718096;
+    color: var(--text-tertiary);
     font-size: 1rem;
 }
 
@@ -176,55 +178,56 @@ body {
 .error {
     text-align: center;
     padding: 60px 0;
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--bg-secondary);
     backdrop-filter: blur(10px);
     border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px var(--shadow-primary);
+    border: 1px solid var(--border-primary);
 }
 
 .error h3 {
-    color: #e53e3e;
+    color: var(--error-primary);
     margin-bottom: 10px;
 }
 
 .error p {
-    color: #718096;
+    color: var(--text-tertiary);
     margin-bottom: 20px;
 }
 
 .retry-btn {
-    background: #e53e3e;
+    background: var(--error-primary);
     color: white;
     border: none;
     padding: 12px 24px;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .retry-btn:hover {
-    background: #c53030;
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
 }
 
 /* Footer */
 .footer {
     text-align: center;
     padding: 40px 0;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-tertiary);
     font-size: 0.9rem;
 }
 
-/* Responsive design */
+/* Responsive Design */
 @media (max-width: 768px) {
     .container {
-        padding: 0 15px;
+        padding: 0 16px;
     }
 
     .header {
-        padding: 40px 0 30px;
+        padding: 30px 0;
     }
 
     .header-content {
