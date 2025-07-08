@@ -6,114 +6,14 @@
     <title>Justin Nearing Resume</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <style>
-      .page-break-after {
-        break-after: page;
-      }
-      .page-break-line {
-        height: 2px;
-        margin: 1rem 0;
-      }
-      @media print {
-        .page-break-after {
-          break-after: page;
-        }
-        /* Ensure dynamic content prints properly */
-        [x-show] {
-          display: block !important;
-        }
-        /* Hide loading and error states in print */
-        [x-show="loading"], [x-show="error"] {
-          display: none !important;
-        }
-        /* Ensure proper page breaks for dynamic content */
-        .mt-6 {
-          margin-top: 1.5rem;
-        }
-        /* Optimize text rendering for print */
-        body {
-          -webkit-print-color-adjust: exact;
-          color-adjust: exact;
-        }
-
-        /* Markdown content styling */
-        .markdown-content strong {
-          font-weight: 600;
-        }
-        .markdown-content em {
-          font-style: italic;
-        }
-        .markdown-content code {
-          background-color: #f3f4f6;
-          padding: 0.125rem 0.25rem;
-          border-radius: 0.25rem;
-          font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
-          font-size: 0.875em;
-        }
-        .markdown-content a {
-          color: inherit;
-          text-decoration: underline;
-        }
-        .markdown-content ul {
-          list-style-type: disc;
-          padding-left: 1.5rem;
-          margin: 0.5rem 0;
-        }
-        .markdown-content li {
-          margin: 0.25rem 0;
-        }
-        .markdown-content p {
-          margin: 0.5rem 0;
-        }
-        .markdown-content h1, .markdown-content h2, .markdown-content h3 {
-          margin: 1rem 0 0.5rem 0;
-          font-weight: 600;
-        }
-      }
-
-      /* Markdown content styling for screen display */
-      .markdown-content strong {
-        font-weight: 600;
-      }
-      .markdown-content em {
-        font-style: italic;
-      }
-      .markdown-content code {
-        background-color: #f3f4f6;
-        padding: 0.125rem 0.25rem;
-        border-radius: 0.25rem;
-        font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
-        font-size: 0.875em;
-      }
-      .markdown-content a {
-        color: inherit;
-        text-decoration: underline;
-      }
-      .markdown-content ul {
-        list-style-type: disc;
-        padding-left: 1.5rem;
-        margin: 0.5rem 0;
-      }
-      .markdown-content li {
-        margin: 0.25rem 0;
-      }
-      .markdown-content p {
-        margin: 0.5rem 0;
-      }
-      .markdown-content h1, .markdown-content h2, .markdown-content h3 {
-        margin: 1rem 0 0.5rem 0;
-        font-weight: 600;
-      }
-
-
-    </style>
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="resume.css">
   </head>
   <body class="bg-gray-50 font-sans text-gray-900" x-data="resumeData()">
 
 
     <!-- Loading State -->
-    <div x-show="loading" class="flex justify-center items-center min-h-screen">
+    <div x-show="loading" class="loading-state flex justify-center items-center min-h-screen">
       <div class="text-center">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-700 mx-auto"></div>
         <p class="mt-4 text-gray-600">Loading resume data...</p>
@@ -121,7 +21,7 @@
     </div>
 
     <!-- Error State -->
-    <div x-show="error" class="flex justify-center items-center min-h-screen">
+    <div x-show="error" class="error-state flex justify-center items-center min-h-screen">
       <div class="text-center">
         <div class="text-red-600 text-xl mb-2">⚠️ Error Loading Resume</div>
         <p class="text-gray-600 mb-4" x-text="error"></p>
@@ -159,12 +59,12 @@
           <!-- Skills -->
           <template x-if="data.sidebar.skills && data.sidebar.skills.categories && data.sidebar.skills.categories.length > 0">
             <div>
-              <h2 class="text-2xl font-bold mt-6" x-text="data.sidebar.skills.title"></h2>
+              <h2 class="text-2xl font-bold" x-text="data.sidebar.skills.title"></h2>
               <hr class="page-break-line">
-              <div class="grid grid-cols-1 gap-y-4 text-sm mt-2">
+              <div class="grid grid-cols-1 gap-y-1 text-sm mt-2">
                 <template x-for="category in data.sidebar.skills.categories" :key="category.name">
                   <div>
-                    <div class="markdown-content mt-1" x-html="getSkillContent(category.markdownPath)"></div>
+                    <div class="markdown-content" x-html="getSkillContent(category.markdownPath)"></div>
                   </div>
                 </template>
               </div>
