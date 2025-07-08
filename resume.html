@@ -106,36 +106,11 @@
         font-weight: 600;
       }
 
-      /* Resume type selector styling */
-      .resume-selector {
-        position: fixed;
-        top: 1rem;
-        right: 1rem;
-        z-index: 1000;
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 0.5rem;
-        padding: 0.5rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      }
-      .resume-selector select {
-        border: 1px solid #d1d5db;
-        border-radius: 0.375rem;
-        padding: 0.25rem 0.5rem;
-        font-size: 0.875rem;
-      }
+
     </style>
   </head>
   <body class="bg-gray-50 font-sans text-gray-900" x-data="resumeData()">
-    <!-- Resume Type Selector (only show in development) -->
-    <div class="resume-selector" x-show="!loading && !error">
-      <label class="block text-xs font-medium text-gray-700 mb-1">Resume Type:</label>
-      <select @change="changeResumeType($event.target.value)" x-model="currentResumeType">
-        <option value="staff_platform_engineer">Staff Platform Engineer</option>
-        <option value="eng_mgr">Engineering Manager</option>
-        <option value="ai_lead">AI Lead</option>
-      </select>
-    </div>
+
 
     <!-- Loading State -->
     <div x-show="loading" class="flex justify-center items-center min-h-screen">
@@ -270,8 +245,21 @@
           markdownCache: {},
           currentResumeType: 'staff_platform_engineer',
 
+          getResumeTypeFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('type');
+            // Validate the type parameter against known resume types
+            const validTypes = ['staff_platform_engineer', 'eng_mgr', 'ai_lead'];
+            return validTypes.includes(type) ? type : 'staff_platform_engineer';
+          },
+
+
+
           async init() {
             try {
+              // Set the resume type from URL parameter
+              this.currentResumeType = this.getResumeTypeFromURL();
+
               // Load shared header and styling data
               const [headerResponse, stylingResponse] = await Promise.all([
                 fetch('data/shared/header.json'),
@@ -311,13 +299,7 @@
             }
           },
 
-          async changeResumeType(newType) {
-            this.currentResumeType = newType;
-            this.loading = true;
-            this.error = null;
-            this.markdownCache = {};
-            await this.init();
-          },
+
 
           async loadAllMarkdown() {
             // Load summary

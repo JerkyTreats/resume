@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Dashboard - Justin Nearing</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">Resume Dashboard</h1>
+                <p class="subtitle">Select a resume type to view</p>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="resume-grid" id="resumeGrid">
+                <!-- Resume cards will be dynamically populated here -->
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Loading resumes...</p>
+            </div>
+
+            <div class="error" id="error" style="display: none;">
+                <h3>Error Loading Resumes</h3>
+                <p id="errorMessage"></p>
+                <button onclick="location.reload()" class="retry-btn">Retry</button>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Justin Nearing. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
