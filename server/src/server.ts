@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 
 import pdfRoutes from './routes/pdf';
 import healthRoutes from './routes/health';
-import config from './config/development';
+import config from './config/production';
 
 // Load environment variables
 dotenv.config();

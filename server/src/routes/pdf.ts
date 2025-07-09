@@ -1,8 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { PDFGenerator } from '../services/pdf-generator';
 import { validateResumeType } from '../middleware/validation';
-import { GeneratePDFRequest, GeneratePDFResponse, ResumeTypesResponse } from '../types';
-import config from '../config/development';
+import { GeneratePDFRequest, GeneratePDFResponse, ResumeTypesResponse, PerformanceMetrics } from '../types';
+import config from '../config/production';
 
 const router = Router();
 const pdfGenerator = new PDFGenerator();
@@ -64,6 +64,9 @@ const pdfGenerator = new PDFGenerator();
  *                   type: boolean
  *                 pdfUrl:
  *                   type: string
+ *                 generationTime:
+ *                   type: number
+ *                   description: Generation time in milliseconds
  *       400:
  *         description: Invalid request parameters
  *         content:
@@ -91,6 +94,8 @@ const pdfGenerator = new PDFGenerator();
  *               properties:
  *                 error:
  *                   type: string
+ *                 generationTime:
+ *                   type: number
  */
 router.post('/generate-pdf', validateResumeType, async (req: Request, res: Response) => {
   try {
@@ -101,7 +106,8 @@ router.post('/generate-pdf', validateResumeType, async (req: Request, res: Respo
     if (!result.success) {
       return res.status(500).json({
         success: false,
-        error: result.error
+        error: result.error,
+        generationTime: result.generationTime
       });
     }
 
@@ -110,7 +116,8 @@ router.post('/generate-pdf', validateResumeType, async (req: Request, res: Respo
 
     const response: GeneratePDFResponse = {
       success: true,
-      pdfUrl
+      pdfUrl,
+      ...(result.generationTime && { generationTime: result.generationTime })
     };
 
     return res.json(response);
@@ -149,6 +156,51 @@ router.get('/resume-types', (req: Request, res: Response) => {
     types: config.resumeTypes
   };
   return res.json(response);
+});
+
+/**
+ * @swagger
+ * /api/performance-metrics:
+ *   get:
+ *     summary: Get PDF generation performance metrics
+ *     tags: [PDF]
+ *     responses:
+ *       200:
+ *         description: Performance metrics for PDF generation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               additionalProperties:
+ *                 type: number
+ *                 description: Generation time in milliseconds for each resume type
+ */
+router.get('/performance-metrics', (req: Request, res: Response) => {
+  const metrics = pdfGenerator.getPerformanceMetrics();
+  const response: PerformanceMetrics = Object.fromEntries(metrics);
+  return res.json(response);
+});
+
+/**
+ * @swagger
+ * /api/clear-performance-metrics:
+ *   post:
+ *     summary: Clear performance metrics
+ *     tags: [PDF]
+ *     responses:
+ *       200:
+ *         description: Performance metrics cleared successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ */
+router.post('/clear-performance-metrics', (req: Request, res: Response) => {
+  pdfGenerator.clearPerformanceMetrics();
+  return res.json({ success: true });
 });
 
 /**
@@ -204,6 +256,56 @@ router.get('/download-pdf', (req: Request, res: Response) => {
     console.error('Download route error:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
+});
+
+/**
+ * @swagger
+ * /api/pdf-config:
+ *   get:
+ *     summary: Get PDF generation configuration options
+ *     tags: [PDF]
+ *     responses:
+ *       200:
+ *         description: PDF configuration options
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 options:
+ *                   type: object
+ *                   properties:
+ *                     width:
+ *                       type: string
+ *                       example: "8.5in"
+ *                     height:
+ *                       type: string
+ *                       example: "100in"
+ *                     printBackground:
+ *                       type: boolean
+ *                       example: true
+ *                     margin:
+ *                       type: object
+ *                       properties:
+ *                         top: { type: string, example: "0.25in" }
+ *                         right: { type: string, example: "0.25in" }
+ *                         bottom: { type: string, example: "0.25in" }
+ *                         left: { type: string, example: "0.25in" }
+ *                     preferCSSPageSize:
+ *                       type: boolean
+ *                       example: true
+ *                     pageRanges:
+ *                       type: string
+ *                       example: "1"
+ *                     scale:
+ *                       type: number
+ *                       example: 1.0
+ */
+router.get('/pdf-config', (req: Request, res: Response) => {
+  const response = {
+    options: config.pdf.defaultOptions
+  };
+  return res.json(response);
 });
 
 export default router;

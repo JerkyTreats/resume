@@ -24,6 +24,7 @@ export interface GeneratePDFResponse {
   success: boolean;
   pdfUrl?: string;
   error?: string;
+  generationTime?: number;
 }
 
 export interface ResumeTypesResponse {
@@ -49,4 +50,9 @@ export interface PDFGenerationResult {
   success: boolean;
   filePath?: string;
   error?: string;
+  generationTime?: number;
+}
+
+export interface PerformanceMetrics {
+  [resumeType: string]: number;
 }

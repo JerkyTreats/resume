@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { validateRequest, validateResumeType, ValidationSchema } from '../../middleware/validation';
+import { ResumeType } from '../../types';
 
 // Mock Express objects
 const createMockRequest = (body: any = {}): Partial<Request> => ({
@@ -288,79 +289,152 @@ describe('Validation Middleware', () => {
   });
 
   describe('validateResumeType', () => {
-    let mockReq: Partial<Request>;
-    let mockRes: Partial<Response>;
+    let mockRequest: Partial<Request>;
+    let mockResponse: Partial<Response>;
     let mockNext: NextFunction;
 
     beforeEach(() => {
-      mockReq = createMockRequest();
-      mockRes = createMockResponse();
-      mockNext = createMockNext();
-    });
-
-    it('should call next() when resumeType is valid', () => {
-      mockReq.body = {
-        resumeType: 'staff_platform_engineer'
+      mockRequest = {
+        body: {},
+        query: {},
+        params: {}
       };
-
-      validateResumeType(mockReq as Request, mockRes as Response, mockNext);
-
-      expect(mockNext).toHaveBeenCalled();
-      expect(mockRes.status).not.toHaveBeenCalled();
-      expect(mockRes.json).not.toHaveBeenCalled();
-    });
-
-    it('should return 400 error when resumeType is missing', () => {
-      mockReq.body = {};
-
-      validateResumeType(mockReq as Request, mockRes as Response, mockNext);
-
-      expect(mockRes.status).toHaveBeenCalledWith(400);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        error: 'resumeType is required'
-      });
-      expect(mockNext).not.toHaveBeenCalled();
-    });
-
-    it('should return 400 error when resumeType is invalid', () => {
-      mockReq.body = {
-        resumeType: 'invalid_type'
+      mockResponse = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis()
       };
-
-      validateResumeType(mockReq as Request, mockRes as Response, mockNext);
-
-      expect(mockRes.status).toHaveBeenCalledWith(400);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        error: 'Invalid resumeType. Must be one of: staff_platform_engineer, eng_mgr, ai_lead'
-      });
-      expect(mockNext).not.toHaveBeenCalled();
+      mockNext = jest.fn();
     });
 
-    it('should accept all valid resume types', () => {
-      const validTypes = ['staff_platform_engineer', 'eng_mgr', 'ai_lead'];
+    it('should pass validation for valid resume types', () => {
+      const validTypes: ResumeType[] = ['staff_platform_engineer', 'eng_mgr', 'ai_lead'];
 
-      for (const resumeType of validTypes) {
-        mockReq.body = { resumeType };
-        mockRes = createMockResponse();
-        mockNext = createMockNext();
+      validTypes.forEach(resumeType => {
+        mockRequest.body = { resumeType };
 
-        validateResumeType(mockReq as Request, mockRes as Response, mockNext);
+        validateResumeType(mockRequest as Request, mockResponse as Response, mockNext);
 
         expect(mockNext).toHaveBeenCalled();
-        expect(mockRes.status).not.toHaveBeenCalled();
-      }
+        expect(mockResponse.status).not.toHaveBeenCalled();
+        expect(mockResponse.json).not.toHaveBeenCalled();
+      });
     });
 
-    it('should handle case sensitivity correctly', () => {
-      mockReq.body = {
-        resumeType: 'STAFF_PLATFORM_ENGINEER'
+    it('should reject invalid resume types', () => {
+      const invalidTypes = ['invalid_type', 'test', '', null, undefined];
+
+      invalidTypes.forEach(invalidType => {
+        mockRequest.body = { resumeType: invalidType };
+
+        validateResumeType(mockRequest as Request, mockResponse as Response, mockNext);
+
+        expect(mockNext).not.toHaveBeenCalled();
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+        expect(mockResponse.json).toHaveBeenCalledWith({
+          error: `Invalid resumeType. Must be one of: staff_platform_engineer, eng_mgr, ai_lead`
+        });
+      });
+    });
+
+    it('should handle missing resume type', () => {
+      mockRequest.body = {};
+
+      validateResumeType(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockNext).not.toHaveBeenCalled();
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        error: 'resumeType is required'
+      });
+    });
+
+    it('should handle case sensitivity', () => {
+      const caseVariations = [
+        'STAFF_PLATFORM_ENGINEER',
+        'Staff_Platform_Engineer',
+        'staff_platform_engineer',
+        'ENG_MGR',
+        'Eng_Mgr',
+        'eng_mgr',
+        'AI_LEAD',
+        'Ai_Lead',
+        'ai_lead'
+      ];
+
+      caseVariations.forEach(resumeType => {
+        // Reset mocks for each iteration
+        jest.clearAllMocks();
+
+        mockRequest.body = { resumeType };
+
+        validateResumeType(mockRequest as Request, mockResponse as Response, mockNext);
+
+        // Only lowercase versions should be valid
+        if (resumeType === 'staff_platform_engineer' ||
+            resumeType === 'eng_mgr' ||
+            resumeType === 'ai_lead') {
+          expect(mockNext).toHaveBeenCalled();
+          expect(mockResponse.status).not.toHaveBeenCalled();
+        } else {
+          expect(mockNext).not.toHaveBeenCalled();
+          expect(mockResponse.status).toHaveBeenCalledWith(400);
+        }
+      });
+    });
+
+    it('should handle non-string resume types', () => {
+      const nonStringTypes = [123, true, false, [], {}, () => {}];
+
+      nonStringTypes.forEach(nonStringType => {
+        mockRequest.body = { resumeType: nonStringType };
+
+        validateResumeType(mockRequest as Request, mockResponse as Response, mockNext);
+
+        expect(mockNext).not.toHaveBeenCalled();
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+        expect(mockResponse.json).toHaveBeenCalledWith({
+          error: `Invalid resumeType. Must be one of: staff_platform_engineer, eng_mgr, ai_lead`
+        });
+      });
+    });
+
+    it('should allow additional properties in request body', () => {
+      mockRequest.body = {
+        resumeType: 'staff_platform_engineer',
+        options: {
+          width: '8.5in',
+          height: '100in'
+        },
+        extraProperty: 'should be ignored'
       };
 
-      validateResumeType(mockReq as Request, mockRes as Response, mockNext);
+      validateResumeType(mockRequest as Request, mockResponse as Response, mockNext);
 
-      expect(mockRes.status).toHaveBeenCalledWith(400);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        error: 'Invalid resumeType. Must be one of: staff_platform_engineer, eng_mgr, ai_lead'
+      expect(mockNext).toHaveBeenCalled();
+      expect(mockResponse.status).not.toHaveBeenCalled();
+    });
+
+    it('should handle empty string resume type', () => {
+      mockRequest.body = { resumeType: '' };
+
+      validateResumeType(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockNext).not.toHaveBeenCalled();
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        error: 'resumeType is required'
+      });
+    });
+
+    it('should handle whitespace-only resume type', () => {
+      mockRequest.body = { resumeType: '   ' };
+
+      validateResumeType(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockNext).not.toHaveBeenCalled();
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        error: `Invalid resumeType. Must be one of: staff_platform_engineer, eng_mgr, ai_lead`
       });
     });
   });

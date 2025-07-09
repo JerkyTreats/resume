@@ -30,7 +30,7 @@ const options: Options = {
             },
             height: {
               type: 'string',
-              default: 'auto',
+              default: '100in',
               description: 'Height determined by content length'
             },
             printBackground: {
