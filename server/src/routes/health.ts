@@ -47,6 +47,8 @@ const pdfGenerator = new PDFGenerator();
  *                   type: string
  */
 router.get('/health', async (req: Request, res: Response) => {
+  const startTime = Date.now();
+
   try {
     const timestamp = new Date().toISOString();
 
@@ -62,10 +64,13 @@ router.get('/health', async (req: Request, res: Response) => {
     };
 
     const statusCode = pdfGeneratorHealthy ? 200 : 500;
+    const responseTime = Date.now() - startTime;
+
     res.status(statusCode).json(response);
 
   } catch (error) {
-    console.error('Health check error:', error);
+    const responseTime = Date.now() - startTime;
+
     const response: HealthResponse = {
       status: 'unhealthy',
       timestamp: new Date().toISOString()

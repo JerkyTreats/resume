@@ -1,5 +1,5 @@
 import { ResumeType } from '../types';
-import { getPDFConfig, getPuppeteerConfig, RESUME_TYPES, Config } from './shared';
+import { getPDFConfig, getPuppeteerConfig, RESUME_TYPES, Config, getLoggingConfig } from './shared';
 
 const port = parseInt(process.env.PORT || '3000');
 
@@ -16,7 +16,8 @@ const config: Config = {
   pdf: {
     defaultOptions: getPDFConfig()
   },
-  resumeTypes: RESUME_TYPES
+  resumeTypes: RESUME_TYPES,
+  logging: getLoggingConfig('production')
 };
 
 export default config;

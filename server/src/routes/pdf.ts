@@ -1,4 +1,6 @@
 import { Router, Request, Response } from 'express';
+import * as path from 'path';
+import * as fs from 'fs';
 import { PDFGenerator } from '../services/pdf-generator';
 import { validateResumeType } from '../middleware/validation';
 import { GeneratePDFRequest, GeneratePDFResponse, ResumeTypesResponse, PerformanceMetrics } from '../types';
@@ -101,9 +103,12 @@ router.post('/generate-pdf', validateResumeType, async (req: Request, res: Respo
   try {
     const { resumeType, options }: GeneratePDFRequest = req.body;
 
-    const result = await pdfGenerator.generatePDF(resumeType, options);
+    console.log(`Starting PDF generation for resume type: ${resumeType}`);
+
+    const result = await pdfGenerator.generatePDF(resumeType, options, req.correlationId);
 
     if (!result.success) {
+      console.error(`PDF generation failed: ${result.error}`);
       return res.status(500).json({
         success: false,
         error: result.error,
@@ -111,8 +116,10 @@ router.post('/generate-pdf', validateResumeType, async (req: Request, res: Respo
       });
     }
 
+    console.log(`PDF generated successfully: ${result.filePath}, time: ${result.generationTime}ms`);
+
     // Create download URL for the generated PDF
-    const pdfUrl = `/download-pdf?file=${encodeURIComponent(result.filePath!)}`;
+    const pdfUrl = `/api/download-pdf?file=${encodeURIComponent(result.filePath!)}`;
 
     const response: GeneratePDFResponse = {
       success: true,
@@ -155,6 +162,7 @@ router.get('/resume-types', (req: Request, res: Response) => {
   const response: ResumeTypesResponse = {
     types: config.resumeTypes
   };
+
   return res.json(response);
 });
 
@@ -178,6 +186,7 @@ router.get('/resume-types', (req: Request, res: Response) => {
 router.get('/performance-metrics', (req: Request, res: Response) => {
   const metrics = pdfGenerator.getPerformanceMetrics();
   const response: PerformanceMetrics = Object.fromEntries(metrics);
+
   return res.json(response);
 });
 
@@ -200,6 +209,7 @@ router.get('/performance-metrics', (req: Request, res: Response) => {
  */
 router.post('/clear-performance-metrics', (req: Request, res: Response) => {
   pdfGenerator.clearPerformanceMetrics();
+
   return res.json({ success: true });
 });
 
@@ -231,29 +241,40 @@ router.post('/clear-performance-metrics', (req: Request, res: Response) => {
  */
 router.get('/download-pdf', (req: Request, res: Response) => {
   try {
-    const filePath = req.query.file as string;
+    const filename = req.query.file as string;
 
-    if (!filePath) {
-      return res.status(400).json({ error: 'File path is required' });
+    if (!filename) {
+      return res.status(400).json({ error: 'File name is required' });
     }
 
-    // Security check: ensure file is within generated-pdfs directory
-    const decodedPath = decodeURIComponent(filePath);
-    const generatedPdfsDir = 'generated-pdfs';
-
-    if (!decodedPath.startsWith(generatedPdfsDir)) {
+    // Security check: ensure filename is safe
+    const decodedFilename = decodeURIComponent(filename);
+    if (decodedFilename.includes('..') || decodedFilename.includes('/') || decodedFilename.includes('\\')) {
       return res.status(403).json({ error: 'Access denied' });
     }
 
-    return res.download(decodedPath, (err) => {
+    // Construct full path within generated-pdfs directory
+    const generatedPdfsDir = 'generated-pdfs';
+    const fullPath = path.join(generatedPdfsDir, decodedFilename);
+
+    console.log(`Download request for file: ${decodedFilename}, full path: ${fullPath}`);
+
+    // Check if file exists
+    if (!fs.existsSync(fullPath)) {
+      console.error(`File not found: ${fullPath}`);
+      return res.status(404).json({ error: 'File not found' });
+    }
+
+    console.log(`Serving file: ${fullPath}`);
+    return res.download(fullPath, (err) => {
       if (err) {
-        console.error('Download error:', err);
+        console.error(`Download error: ${err}`);
         res.status(500).json({ error: 'Failed to download file' });
       }
     });
 
   } catch (error) {
-    console.error('Download route error:', error);
+    console.error('Download endpoint error:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
@@ -305,6 +326,7 @@ router.get('/pdf-config', (req: Request, res: Response) => {
   const response = {
     options: config.pdf.defaultOptions
   };
+
   return res.json(response);
 });
 

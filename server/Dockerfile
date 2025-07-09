@@ -4,7 +4,7 @@ FROM node:24.3.0-alpine
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies for Puppeteer
+# Install system dependencies for Puppeteer and emoji fonts
 RUN apk add --no-cache \
     chromium \
     nss \
@@ -12,7 +12,12 @@ RUN apk add --no-cache \
     freetype-dev \
     harfbuzz \
     ca-certificates \
-    ttf-freefont
+    ttf-freefont \
+    fontconfig \
+    && apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+    font-noto-emoji \
+    font-noto-color-emoji \
+    && fc-cache -fv
 
 # Set Puppeteer to use installed Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \

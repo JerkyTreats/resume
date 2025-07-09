@@ -8,6 +8,8 @@ import dotenv from 'dotenv';
 import pdfRoutes from './routes/pdf';
 import healthRoutes from './routes/health';
 import config from './config/production';
+import logger from './services/logger';
+import { loggingMiddleware, errorLoggingMiddleware } from './middleware/logging';
 
 // Load environment variables
 dotenv.config();
@@ -19,6 +21,9 @@ const PORT = config.port;
 app.use(cors(config.cors));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+
+// Logging middleware
+app.use(loggingMiddleware);
 
 // Serve static files
 app.use(express.static(path.join(process.cwd())));
@@ -56,8 +61,8 @@ app.get('/resume', (req, res) => {
 });
 
 // Error handling middleware
+app.use(errorLoggingMiddleware);
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error('Unhandled error:', err);
   res.status(500).json({
     error: 'Internal server error',
     message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
@@ -74,17 +79,18 @@ app.use('*', (req, res) => {
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
-  console.log('SIGTERM received, shutting down gracefully');
+  logger.logServerShutdown('SIGTERM');
   process.exit(0);
 });
 
 process.on('SIGINT', () => {
-  console.log('SIGINT received, shutting down gracefully');
+  logger.logServerShutdown('SIGINT');
   process.exit(0);
 });
 
 // Start server
 app.listen(PORT, () => {
+  logger.logServerStart(PORT);
   console.log(`🚀 Server running on http://localhost:${PORT}`);
   console.log(`📚 API Documentation available at http://localhost:${PORT}/api-docs`);
   console.log(`🏠 Dashboard available at http://localhost:${PORT}/dashboard`);

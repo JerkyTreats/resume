@@ -41,7 +41,7 @@ export class PDFGenerator {
     }
   }
 
-  async generatePDF(resumeType: ResumeType, options?: PDFOptions): Promise<PDFGenerationResult> {
+  async generatePDF(resumeType: ResumeType, options?: PDFOptions, correlationId?: string): Promise<PDFGenerationResult> {
     const startTime = Date.now();
 
     if (!this.browser) {
@@ -61,6 +61,78 @@ export class PDFGenerator {
 
       // Enhanced viewport for better rendering
       await page.setViewport({ width: 1200, height: 800, deviceScaleFactor: 2 });
+
+      // Emoji fallback - only remove emojis if they're not rendering properly
+      await page.evaluateOnNewDocument(() => {
+        // Function to remove emojis from text
+        function removeEmojis(text: string): string {
+          // Remove emoji characters (Unicode ranges for emojis)
+          return text.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '');
+        }
+
+        // Function to check if emojis are rendering properly
+        function checkEmojiRendering() {
+          // Create a test element with emojis
+          const testElement = document.createElement('div');
+          testElement.style.position = 'absolute';
+          testElement.style.left = '-9999px';
+          testElement.style.top = '-9999px';
+          testElement.textContent = '📧📍🔗💻🌐📞';
+          document.body.appendChild(testElement);
+
+          // Check if the emojis render as expected characters
+          const renderedText = testElement.textContent;
+          const hasBrokenEmojis = renderedText.includes('?') || renderedText.includes('') || renderedText.length !== 6;
+
+          // Clean up test element
+          document.body.removeChild(testElement);
+
+          return !hasBrokenEmojis;
+        }
+
+        // Function to process all text nodes and remove emojis if needed
+        function processEmojisAsFallback() {
+          // First check if emojis are rendering properly
+          const emojisRenderProperly = checkEmojiRendering();
+
+          if (!emojisRenderProperly) {
+            console.log('Emojis not rendering properly, removing them as fallback');
+
+            const walker = document.createTreeWalker(
+              document.body,
+              NodeFilter.SHOW_TEXT,
+              null
+            );
+
+            const textNodes: Text[] = [];
+            let node;
+            while (node = walker.nextNode()) {
+              textNodes.push(node as Text);
+            }
+
+            textNodes.forEach(textNode => {
+              if (textNode.textContent) {
+                const cleanedText = removeEmojis(textNode.textContent);
+                if (cleanedText !== textNode.textContent) {
+                  textNode.textContent = cleanedText;
+                }
+              }
+            });
+          } else {
+            console.log('Emojis rendering properly, keeping them');
+          }
+        }
+
+        // Run emoji processing after page loads
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', processEmojisAsFallback);
+        } else {
+          processEmojisAsFallback();
+        }
+
+        // Also run after Alpine.js content loads
+        setTimeout(processEmojisAsFallback, 2000);
+      });
 
       // Construct the URL for the resume
       const port = process.env.PORT || config.port || 3000;
@@ -112,11 +184,6 @@ export class PDFGenerator {
       const generationTime = Date.now() - startTime;
       this.performanceMetrics.set(resumeType, generationTime);
 
-      // Performance monitoring alert
-      if (generationTime > 30000) {
-        console.warn(`⚠️ PDF generation for ${resumeType} took ${generationTime}ms (>30s)`);
-      }
-
       return {
         success: true,
         filePath,
@@ -125,8 +192,6 @@ export class PDFGenerator {
 
     } catch (error) {
       const generationTime = Date.now() - startTime;
-      console.error(`PDF generation failed for ${resumeType}:`, error);
-
       return {
         success: false,
         error: `PDF generation failed: ${error}`,
@@ -173,7 +238,6 @@ export class PDFGenerator {
       await new Promise(resolve => setTimeout(resolve, 2000));
 
     } catch (error) {
-      console.warn('Alpine.js content waiting failed, proceeding anyway:', error);
     }
   }
 
@@ -191,7 +255,6 @@ export class PDFGenerator {
       }, { timeout: 5000 });
 
     } catch (error) {
-      console.warn('Resource waiting failed, proceeding anyway:', error);
     }
   }
 
@@ -209,7 +272,6 @@ export class PDFGenerator {
       await new Promise(resolve => setTimeout(resolve, 1000));
 
     } catch (error) {
-      console.warn('Dynamic content waiting failed, proceeding anyway:', error);
     }
   }
 
