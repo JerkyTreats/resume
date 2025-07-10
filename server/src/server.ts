@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 
 import pdfRoutes from './routes/pdf';
 import healthRoutes from './routes/health';
+import renderRoutes from './routes/render';
 import config from './config/production';
 import logger from './services/logger';
 import { loggingMiddleware, errorLoggingMiddleware } from './middleware/logging';
@@ -46,6 +47,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 // API Routes
 app.use('/api', pdfRoutes);
 app.use('/api', healthRoutes);
+app.use('/api', renderRoutes);
 
 // Serve HTML pages
 app.get('/', (req, res) => {
@@ -58,6 +60,79 @@ app.get('/dashboard', (req, res) => {
 
 app.get('/resume', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'resume.html'));
+});
+
+// SSR Resume route (for dashboard links)
+app.get('/resume-ssr', async (req, res) => {
+  try {
+    const { resumeType, template = 'default' } = req.query;
+
+    if (!resumeType || typeof resumeType !== 'string') {
+      res.status(400).send(`
+        <html>
+          <body>
+            <h1>Error</h1>
+            <p>resumeType parameter is required</p>
+            <a href="/dashboard">Back to Dashboard</a>
+          </body>
+        </html>
+      `);
+      return;
+    }
+
+    // Import the resume renderer
+    const { ResumeRenderer } = await import('./services/resume-renderer');
+    const resumeRenderer = new ResumeRenderer();
+
+    // Validate resume type exists
+    const availableTypes = await resumeRenderer.getAvailableResumeTypes();
+    if (!availableTypes.includes(resumeType)) {
+      res.status(400).send(`
+        <html>
+          <body>
+            <h1>Error</h1>
+            <p>Invalid resume type. Available types: ${availableTypes.join(', ')}</p>
+            <a href="/dashboard">Back to Dashboard</a>
+          </body>
+        </html>
+      `);
+      return;
+    }
+
+    // Validate template exists
+    const availableTemplates = await resumeRenderer.getAvailableTemplates();
+    if (!availableTemplates.includes(template as string)) {
+      res.status(400).send(`
+        <html>
+          <body>
+            <h1>Error</h1>
+            <p>Invalid template. Available templates: ${availableTemplates.join(', ')}</p>
+            <a href="/dashboard">Back to Dashboard</a>
+          </body>
+        </html>
+      `);
+      return;
+    }
+
+    // Render the resume
+    const renderedResume = await resumeRenderer.renderResume(resumeType, template as string);
+
+    // Send as HTML page
+    res.setHeader('Content-Type', 'text/html');
+    res.send(renderedResume.html);
+
+  } catch (error) {
+    console.error('Resume rendering error:', error);
+    res.status(500).send(`
+      <html>
+        <body>
+          <h1>Error</h1>
+          <p>Failed to render resume: ${error}</p>
+          <a href="/dashboard">Back to Dashboard</a>
+        </body>
+      </html>
+    `);
+  }
 });
 
 // Error handling middleware

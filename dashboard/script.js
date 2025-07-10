@@ -115,7 +115,7 @@ class ResumeDashboard {
 
     createResumeCard(resume) {
         const card = document.createElement('a');
-        card.href = `../resume.html?type=${resume.id}`;
+        card.href = `/resume-ssr?resumeType=${resume.id}&template=default`;
         card.className = 'resume-card';
         card.target = '_blank';
 

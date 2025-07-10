@@ -7,5 +7,9 @@
   ],
   "json.validate.enable": true,
   "json.format.enable": true,
-  "json.schemaDownload.enable": true
+  "json.schemaDownload.enable": true,
+  "css.validate": false,
+  "files.associations": {
+    "*.html": "handlebars"
+  }
 }
