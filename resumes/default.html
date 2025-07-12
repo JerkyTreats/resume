@@ -54,17 +54,17 @@
         <div class="text-sm mt-2" style="color: {{styling.colors.textSecondary}}">
           <div class="flex gap-12">
             <div class="space-y-2">
-              <div>{{{icon "email"}}} <span>{{header.email}}</span></div>
-              <div>{{{icon "location"}}} <span>{{header.location}}</span></div>
+              <div class="flex items-center">{{{icon "email"}}} <span class="ml-1">{{header.email}}</span></div>
+              <div class="flex items-center">{{{icon "location"}}} <span class="ml-1">{{header.location}}</span></div>
             </div>
             <div class="space-y-2">
-              <div>{{{icon "link"}}} <a href="{{header.linkedin}}" style="color: {{styling.colors.textAccent}}" class="underline">LinkedIn</a></div>
-              <div>{{{icon "github"}}} <a href="{{header.github}}" style="color: {{styling.colors.textAccent}}" class="underline">GitHub</a></div>
+              <div class="flex items-center">{{{icon "link"}}} <a href="{{header.linkedin}}" style="color: {{styling.colors.textAccent}}" class="underline ml-1">LinkedIn</a></div>
+              <div class="flex items-center">{{{icon "github"}}} <a href="{{header.github}}" style="color: {{styling.colors.textAccent}}" class="underline ml-1">GitHub</a></div>
             </div>
             <div class="space-y-2">
-              <div>{{{icon "website"}}} <a href="{{header.website}}" style="color: {{styling.colors.textAccent}}" class="underline">{{header.website}}</a></div>
+              <div class="flex items-center">{{{icon "website"}}} <a href="{{header.website}}" style="color: {{styling.colors.textAccent}}" class="underline ml-1">{{header.website}}</a></div>
               {{#if header.phone}}
-              <div>{{{icon "phone"}}} <span>{{header.phone}}</span></div>
+              <div class="flex items-center">{{{icon "phone"}}} <span class="ml-1">{{header.phone}}</span></div>
               {{/if}}
             </div>
           </div>

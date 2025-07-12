@@ -84,14 +84,14 @@ export class PDFConfigManager {
   private loadPDFOptions(): PDFOptions {
     return {
       // Page dimensions - optimized for resume layout
-      width: process.env.PDF_WIDTH || '8.5in',
-      height: process.env.PDF_HEIGHT || '100in', // Very large height for pageless effect
+      width: process.env.PDF_WIDTH || '20in',
+      height: process.env.PDF_HEIGHT || '100in', // DO NOT CHANGE THIS
 
       // Quality settings
       printBackground: process.env.PDF_PRINT_BACKGROUND !== 'false',
       scale: parseFloat(process.env.PDF_SCALE || '1.0'),
 
-      // Margins - zero for full content area
+      // Margins - DO NOT CHANGE THIS
       margin: {
         top: process.env.PDF_MARGIN_TOP || '0in',
         right: process.env.PDF_MARGIN_RIGHT || '0in',

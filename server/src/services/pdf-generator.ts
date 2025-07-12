@@ -87,8 +87,45 @@ export class PDFGenerator {
       // Wait for resume content to be fully rendered
       await page.waitForSelector(renderingConfig.waitForSelector, { timeout: renderingConfig.waitTimeout });
 
+            // Measure actual content dimensions
+      const contentDimensions = await page.evaluate(() => {
+        const resumeContent = document.querySelector('.resume-content');
+        if (!resumeContent) {
+          throw new Error('Resume content element not found');
+        }
+
+        const rect = resumeContent.getBoundingClientRect();
+        const computedStyle = window.getComputedStyle(resumeContent);
+
+        // Get the actual content dimensions including padding and borders
+        const width = rect.width +
+          parseFloat(computedStyle.paddingLeft) +
+          parseFloat(computedStyle.paddingRight) +
+          parseFloat(computedStyle.borderLeftWidth) +
+          parseFloat(computedStyle.borderRightWidth);
+
+        const height = rect.height +
+          parseFloat(computedStyle.paddingTop) +
+          parseFloat(computedStyle.paddingBottom) +
+          parseFloat(computedStyle.borderTopWidth) +
+          parseFloat(computedStyle.borderBottomWidth);
+
+        // Validate dimensions
+        if (width <= 0 || height <= 0) {
+          throw new Error(`Invalid content dimensions: ${width}x${height}px`);
+        }
+
+        return { width: Math.ceil(width), height: Math.ceil(height) };
+      });
+
+      console.log(`Measured content dimensions: ${contentDimensions.width}x${contentDimensions.height}px`);
+
       // Merge default options with provided options using centralized config
       const pdfOptions = this.pdfConfigManager.mergeOptions(options);
+
+      // Override PDF dimensions with measured content dimensions
+      pdfOptions.width = `${contentDimensions.width}px`;
+      pdfOptions.height = `${contentDimensions.height}px`;
 
       // Generate PDF with enhanced settings
       const pdfBuffer = await page.pdf(pdfOptions);
