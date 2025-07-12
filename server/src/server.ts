@@ -8,6 +8,9 @@ import dotenv from 'dotenv';
 import pdfRoutes from './routes/pdf';
 import healthRoutes from './routes/health';
 import renderRoutes from './routes/render';
+import cssRoutes from './routes/css';
+import pdfConfigRoutes from './routes/pdf-config';
+import assetRoutes from './routes/assets';
 import config from './config/production';
 import logger from './services/logger';
 import { loggingMiddleware, errorLoggingMiddleware } from './middleware/logging';
@@ -48,6 +51,9 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use('/api', pdfRoutes);
 app.use('/api', healthRoutes);
 app.use('/api', renderRoutes);
+app.use('/api/css', cssRoutes);
+app.use('/api/pdf-config', pdfConfigRoutes);
+app.use('/api/assets', assetRoutes);
 
 // Serve HTML pages
 app.get('/', (req, res) => {

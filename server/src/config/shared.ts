@@ -13,6 +13,11 @@ export interface PDFOptions {
   preferCSSPageSize: boolean;
   pageRanges?: string;
   scale: number;
+  displayHeaderFooter: boolean;
+  omitBackground: boolean;
+  timeout: number;
+  waitForSelector: string;
+  waitForFunction: string;
 }
 
 export interface LoggingConfig {
@@ -48,33 +53,56 @@ export interface Config {
   logging: LoggingConfig;
 }
 
-// Shared PDF configuration with environment variable support
-export const getPDFConfig = (): PDFOptions => ({
-  width: process.env.PDF_WIDTH || '8.5in',
-  height: process.env.PDF_HEIGHT || '100in', // Very large height for pageless effect
-  printBackground: process.env.PDF_PRINT_BACKGROUND !== 'false',
-  margin: {
-    top: process.env.PDF_MARGIN_TOP || '0in',
-    right: process.env.PDF_MARGIN_RIGHT || '0in',
-    bottom: process.env.PDF_MARGIN_BOTTOM || '0in',
-    left: process.env.PDF_MARGIN_LEFT || '0in'
-  },
-  preferCSSPageSize: process.env.PDF_PREFER_CSS_PAGE_SIZE !== 'false', // Let CSS control page size
-  pageRanges: process.env.PDF_PAGE_RANGES || '1',
-  scale: parseFloat(process.env.PDF_SCALE || '1.0')
-});
+// PDF configuration is now centralized in PDFConfigManager
+// This function is kept for backward compatibility but delegates to the centralized manager
+export const getPDFConfig = (): PDFOptions => {
+  const { PDFConfigManager } = require('./pdf-config');
+  const pdfConfigManager = PDFConfigManager.getInstance();
+  return pdfConfigManager.getOptions();
+};
 
 // Shared Puppeteer configuration
 export const getPuppeteerConfig = () => ({
   headless: "new" as const,
   args: [
+    // Security and compatibility
     '--no-sandbox',
     '--disable-setuid-sandbox',
+
+    // Font rendering optimizations for PDF generation
     '--enable-font-antialiasing',
     '--font-render-hinting=none',
     '--disable-font-subpixel-positioning',
     '--enable-features=FontSrcLocalMatching',
-    '--enable-blink-features=CSSFontMetrics'
+    '--enable-blink-features=CSSFontMetrics',
+
+    // PDF-specific optimizations
+    '--disable-background-timer-throttling',
+    '--disable-backgrounding-occluded-windows',
+    '--disable-renderer-backgrounding',
+    '--disable-features=VizDisplayCompositor',
+    '--disable-field-trial-config',
+    '--disable-ipc-flooding-protection',
+
+    // Memory and performance optimizations
+    '--disable-dev-shm-usage',
+    '--disable-gpu',
+    '--no-first-run',
+    '--no-zygote',
+    '--disable-extensions',
+    '--disable-web-security',
+
+    // Additional PDF optimizations
+    '--disable-plugins',
+    '--disable-default-apps',
+    '--disable-sync',
+    '--disable-translate',
+    '--hide-scrollbars',
+    '--mute-audio',
+    '--no-default-browser-check',
+    '--no-pings',
+    '--disable-background-networking',
+    '--disable-component-extensions-with-background-pages'
   ]
 });
 

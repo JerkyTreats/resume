@@ -4,10 +4,11 @@ import * as fs from 'fs';
 import { PDFGenerator } from '../services/pdf-generator';
 import { validateResumeType } from '../middleware/validation';
 import { GeneratePDFRequest, GeneratePDFResponse, ResumeTypesResponse, PerformanceMetrics } from '../types';
-import config from '../config/production';
+import { PDFConfigManager } from '../config/pdf-config';
 
 const router = Router();
 const pdfGenerator = new PDFGenerator();
+const pdfConfigManager = PDFConfigManager.getInstance();
 
 /**
  * @swagger
@@ -118,8 +119,9 @@ router.post('/generate-pdf', validateResumeType, async (req: Request, res: Respo
 
     console.log(`PDF generated successfully: ${result.filePath}, time: ${result.generationTime}ms`);
 
-    // Create download URL for the generated PDF
-    const pdfUrl = `/api/download-pdf?file=${encodeURIComponent(result.filePath!)}`;
+    // Create download URL for the generated PDF - use just the filename
+    const filename = path.basename(result.filePath!);
+    const pdfUrl = `/api/download-pdf?file=${encodeURIComponent(filename)}`;
 
     const response: GeneratePDFResponse = {
       success: true,
@@ -160,7 +162,7 @@ router.post('/generate-pdf', validateResumeType, async (req: Request, res: Respo
  */
 router.get('/resume-types', (req: Request, res: Response) => {
   const response: ResumeTypesResponse = {
-    types: config.resumeTypes
+    types: ['staff_platform_engineer', 'eng_mgr', 'ai_lead']
   };
 
   return res.json(response);
@@ -324,7 +326,7 @@ router.get('/download-pdf', (req: Request, res: Response) => {
  */
 router.get('/pdf-config', (req: Request, res: Response) => {
   const response = {
-    options: config.pdf.defaultOptions
+    options: pdfConfigManager.getOptions()
   };
 
   return res.json(response);

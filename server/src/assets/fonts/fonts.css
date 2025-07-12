@@ -1,0 +1,49 @@
+/* Local font definitions for PDF generation */
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('data:font/truetype;base64,') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('data:font/truetype;base64,') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('data:font/truetype;base64,') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lato';
+  src: url('data:font/truetype;base64,') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lato';
+  src: url('data:font/truetype;base64,') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lato';
+  src: url('data:font/truetype;base64,') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

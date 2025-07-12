@@ -20,7 +20,7 @@
     <div class="text-white relative flex flex-col w-1/3" style="background-color: {{styling.colors.primary}}">
       <div class="pt-14 px-6">
         <div class="flex justify-center mb-8">
-          <img src="data/{{sidebar.photo}}" alt="Profile photo" class="w-32 rounded-full border-4 border-white">
+          <img src="{{#if (startsWith sidebar.photo 'data:')}}{{sidebar.photo}}{{else}}data/{{sidebar.photo}}{{/if}}" alt="Profile photo" class="w-32 rounded-full border-4 border-white">
         </div>
       </div>
 
@@ -54,17 +54,17 @@
         <div class="text-sm mt-2" style="color: {{styling.colors.textSecondary}}">
           <div class="flex gap-12">
             <div class="space-y-2">
-              <div>📧 <span>{{header.email}}</span></div>
-              <div>📍 <span>{{header.location}}</span></div>
+              <div>{{{icon "email"}}} <span>{{header.email}}</span></div>
+              <div>{{{icon "location"}}} <span>{{header.location}}</span></div>
             </div>
             <div class="space-y-2">
-              <div>🔗 <a href="{{header.linkedin}}" style="color: {{styling.colors.textAccent}}" class="underline">LinkedIn</a></div>
-              <div>💻 <a href="{{header.github}}" style="color: {{styling.colors.textAccent}}" class="underline">GitHub</a></div>
+              <div>{{{icon "link"}}} <a href="{{header.linkedin}}" style="color: {{styling.colors.textAccent}}" class="underline">LinkedIn</a></div>
+              <div>{{{icon "github"}}} <a href="{{header.github}}" style="color: {{styling.colors.textAccent}}" class="underline">GitHub</a></div>
             </div>
             <div class="space-y-2">
-              <div>🌐 <a href="{{header.website}}" style="color: {{styling.colors.textAccent}}" class="underline">{{header.website}}</a></div>
+              <div>{{{icon "website"}}} <a href="{{header.website}}" style="color: {{styling.colors.textAccent}}" class="underline">{{header.website}}</a></div>
               {{#if header.phone}}
-              <div>📞 <span>{{header.phone}}</span></div>
+              <div>{{{icon "phone"}}} <span>{{header.phone}}</span></div>
               {{/if}}
             </div>
           </div>

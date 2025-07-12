@@ -2,6 +2,7 @@ import Handlebars from 'handlebars';
 import { marked } from 'marked';
 import * as path from 'path';
 import * as fs from 'fs';
+import { AssetManager } from './asset-manager';
 
 export interface ServerRenderedResume {
   html: string;                    // Fully rendered HTML
@@ -25,8 +26,10 @@ export interface ResumeData {
 
 export class HandlebarsTemplateEngine {
   private compiledTemplates: Map<string, HandlebarsTemplateDelegate> = new Map();
+  private assetManager: AssetManager;
 
   constructor() {
+    this.assetManager = AssetManager.getInstance();
     this.configureMarked();
     this.registerHelpers();
   }
@@ -80,6 +83,17 @@ export class HandlebarsTemplateEngine {
     Handlebars.registerHelper('ifFirst', function(this: any, index: number, options: any) {
       return index === 0 ? options.fn(this) : options.inverse(this);
     });
+
+    // String startsWith helper
+    Handlebars.registerHelper('startsWith', function(str: string, prefix: string) {
+      return str && str.startsWith(prefix);
+    });
+
+            // Icon helper using asset manager
+    Handlebars.registerHelper('icon', async function(this: any, iconType: string) {
+      const iconHTML = await this.assetManager.getIconHTML(iconType);
+      return new Handlebars.SafeString(iconHTML);
+    });
   }
 
   async renderTemplate(templateName: string, data: ResumeData): Promise<string> {
@@ -105,15 +119,17 @@ export class HandlebarsTemplateEngine {
     return compiledTemplate;
   }
 
+  // CSS handling is now centralized in CSSManager
+  // This method is kept for backward compatibility but delegates to CSSManager
   async getTemplateCSS(templateName: string): Promise<string> {
-    const cssPath = path.join(process.cwd(), 'resumes', 'styles', `${templateName}.css`);
-
-    if (!fs.existsSync(cssPath)) {
-      // Return empty string if no template-specific CSS exists
-      return '';
-    }
-
-    return await fs.promises.readFile(cssPath, 'utf-8');
+    const { CSSManager } = await import('./css-manager');
+    const cssManager = CSSManager.getInstance();
+    return await cssManager.getCompleteCSS({
+      forPDF: false,
+      template: templateName,
+      includeFonts: true,
+      includeIcons: true
+    });
   }
 
   clearCache(): void {

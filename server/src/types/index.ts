@@ -13,6 +13,8 @@ export interface PDFOptions {
   preferCSSPageSize?: boolean;
   pageRanges?: string;
   scale?: number;
+  displayHeaderFooter?: boolean;
+  omitBackground?: boolean;
 }
 
 export interface GeneratePDFRequest {

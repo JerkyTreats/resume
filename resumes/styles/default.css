@@ -11,10 +11,65 @@ body {
   font-family: var(--font-body);
 }
 
+/* Enhanced emoji support */
+.emoji,
+[data-emoji="true"] {
+  font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Android Emoji', 'EmojiSymbols', 'EmojiOne Mozilla', 'Twemoji Mozilla', sans-serif;
+  font-feature-settings: "emoji";
+  font-variant-emoji: emoji;
+}
+
+/* Ensure emojis in contact info are properly styled */
+.resume-content .text-sm .emoji,
+.resume-content .text-sm [data-emoji="true"] {
+  font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Android Emoji', 'EmojiSymbols', 'EmojiOne Mozilla', 'Twemoji Mozilla', sans-serif;
+  font-feature-settings: "emoji";
+  font-variant-emoji: emoji;
+}
+
 /* Heading styles */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
 }
+
+/* Tailwind CSS utilities for PDF generation */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.w-1\/3 { width: 33.333333%; }
+.w-2\/3 { width: 66.666667%; }
+.flex-1 { flex: 1 1 0%; }
+.pt-6 { padding-top: 1.5rem; }
+.px-10 { padding-left: 2.5rem; padding-right: 2.5rem; }
+.text-2xl { font-size: 1.5rem; }
+.font-bold { font-weight: 700; }
+.font-semibold { font-weight: 600; }
+.text-md { font-size: 1rem; }
+.text-base { font-size: 1rem; }
+.font-medium { font-weight: 500; }
+.text-sm { font-size: 0.875rem; }
+.mt-4 { margin-top: 1rem; }
+.mt-6 { margin-top: 1.5rem; }
+.mt-1 { margin-top: 0.25rem; }
+.justify-between { justify-content: space-between; }
+.text-white { color: white; }
+.bg-gray-800 { background-color: #1f2937; }
+.min-h-screen { min-height: 100vh; }
+.resume-content { background: white; }
+
+/* Profile picture sizing for PDF */
+.sidebar img {
+  max-width: 120px !important;
+  max-height: 120px !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+}
+
+/* Ensure proper text colors in PDF */
+.text-primary { color: #000000; }
+.text-secondary { color: #4a5568; }
+.text-accent { color: #0e7490; }
 
 /* Section headings (Summary, Experience, Skills) */
 h2.text-2xl.font-bold {
@@ -124,7 +179,6 @@ h2.text-2xl.font-bold {
 
 /* Resume content container */
 .resume-content {
-  min-height: 100vh;
   background: white;
 }
 
@@ -146,5 +200,29 @@ h2.text-2xl.font-bold {
   .resume-content {
     margin: 0;
     box-shadow: none;
+    min-height: auto !important;
+    height: auto !important;
+  }
+
+  /* Ensure flex layout works properly in PDF */
+  .flex {
+    display: flex !important;
+  }
+
+  .flex-col {
+    flex-direction: column !important;
+  }
+
+  .w-1\/3 {
+    width: 33.333333% !important;
+  }
+
+  .w-2\/3 {
+    width: 66.666667% !important;
+  }
+
+  /* Ensure content flows properly */
+  .flex-1 {
+    flex: 1 1 0% !important;
   }
 }
