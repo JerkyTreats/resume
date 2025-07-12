@@ -388,6 +388,33 @@ export class UnifiedTemplateEngine {
    */
   private getIconHTMLSync(iconType: string): string {
     const iconMap: { [key: string]: string } = {
+      'email': '1f4e7',
+      'location': '1f4cd',
+      'link': '1f517',
+      'github': '1f4bb',
+      'website': '1f310',
+      'phone': '1f4de'
+    };
+
+    const iconCode = iconMap[iconType];
+    if (!iconCode) {
+      return '•';
+    }
+
+    try {
+      const svgPath = path.join(process.cwd(), 'assets', 'emoji', `${iconCode}.svg`);
+      if (fs.existsSync(svgPath)) {
+        const svgContent = fs.readFileSync(svgPath, 'utf-8');
+        const base64 = Buffer.from(svgContent).toString('base64');
+        const dataUri = `data:image/svg+xml;base64,${base64}`;
+        return `<img src="${dataUri}" alt="${iconType}" style="width: 1em; height: 1em; vertical-align: middle; display: inline-block;">`;
+      }
+    } catch (error) {
+      console.warn(`Failed to load SVG icon for ${iconType}:`, error);
+    }
+
+    // Fallback to Unicode emoji
+    const unicodeMap: { [key: string]: string } = {
       'email': '✉',
       'location': '📍',
       'link': '🔗',
@@ -396,7 +423,7 @@ export class UnifiedTemplateEngine {
       'phone': '📞'
     };
 
-    return iconMap[iconType] || '•';
+    return unicodeMap[iconType] || '•';
   }
 
   /**
