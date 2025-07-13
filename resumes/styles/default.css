@@ -582,6 +582,12 @@ h2.text-2xl.font-bold {
     font-weight: 700 !important;
   }
 
+  /* Section headings (Summary, Experience, Skills) - ensure consistent weight */
+  h2.text-2xl.font-bold {
+    font-size: 1.5rem !important;
+    font-weight: 500 !important;
+  }
+
   .pt-8 {
     padding-top: 2rem !important;
   }

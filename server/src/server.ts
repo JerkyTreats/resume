@@ -66,7 +66,7 @@ app.get('/dashboard', (req, res) => {
 
 
 
-// Resume route (server-side rendered)
+// Resume route (server-side rendered with navigation)
 app.get('/resume', async (req, res) => {
   try {
     const { resumeType, template = 'default' } = req.query;
@@ -84,12 +84,14 @@ app.get('/resume', async (req, res) => {
       return;
     }
 
-    // Import the resume renderer
-    const { ResumeRenderer } = await import('./services/resume-renderer');
-    const resumeRenderer = new ResumeRenderer();
+    // Import the necessary services
+    const { UnifiedTemplateEngine } = await import('./services/unified-template-engine');
+    const { ContentWrapper } = await import('./services/content-wrapper');
+    const templateEngine = UnifiedTemplateEngine.getInstance();
+    const contentWrapper = ContentWrapper.getInstance();
 
     // Validate resume type exists
-    const availableTypes = await resumeRenderer.getAvailableResumeTypes();
+    const availableTypes = await templateEngine.getAvailableResumeTypes();
     if (!availableTypes.includes(resumeType)) {
       res.status(400).send(`
         <html>
@@ -104,7 +106,7 @@ app.get('/resume', async (req, res) => {
     }
 
     // Validate template exists
-    const availableTemplates = await resumeRenderer.getAvailableTemplates();
+    const availableTemplates = await templateEngine.getAvailableTemplates();
     if (!availableTemplates.includes(template as string)) {
       res.status(400).send(`
         <html>
@@ -118,12 +120,15 @@ app.get('/resume', async (req, res) => {
       return;
     }
 
-    // Render the resume
-    const renderedResume = await resumeRenderer.renderResume(resumeType, template as string);
+    // Render the resume for browser (with navigation)
+    const renderedResume = await templateEngine.renderResume(resumeType, template as string, { forPDF: false });
 
-    // Send as HTML page
+    // Wrap with browser navigation
+    const browserHTML = await contentWrapper.wrapForBrowser(renderedResume);
+
+    // Send as HTML page with navigation
     res.setHeader('Content-Type', 'text/html');
-    res.send(renderedResume.html);
+    res.send(browserHTML);
 
   } catch (error) {
     console.error('Resume rendering error:', error);

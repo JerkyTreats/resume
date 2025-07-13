@@ -74,6 +74,8 @@ export class ContentWrapper {
   private async loadNavigationComponent(): Promise<string> {
     const navPath = path.join(process.cwd(), 'components', 'navigation', 'nav.html');
 
+    console.log(`Loading navigation from: ${navPath}`);
+
     if (!fs.existsSync(navPath)) {
       // Return empty string if navigation component doesn't exist yet
       // This allows the system to work before navigation is implemented
@@ -81,6 +83,8 @@ export class ContentWrapper {
       return '';
     }
 
-    return await fs.promises.readFile(navPath, 'utf-8');
+    const navContent = await fs.promises.readFile(navPath, 'utf-8');
+    console.log(`Navigation content loaded, length: ${navContent.length}`);
+    return navContent;
   }
 }
