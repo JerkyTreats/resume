@@ -1,8 +1,10 @@
 import { Router, Request, Response } from 'express';
 import { ResumeRenderer } from '../services/resume-renderer';
+import { UnifiedTemplateEngine } from '../services/unified-template-engine';
 
 const router = Router();
 const resumeRenderer = new ResumeRenderer();
+const templateEngine = UnifiedTemplateEngine.getInstance();
 
 // GET /api/render-resume
 // Renders a resume using server-side Handlebars templating
@@ -159,6 +161,24 @@ router.get('/available-templates', async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       error: `Failed to get templates: ${error}`
+    });
+  }
+});
+
+// POST /api/clear-template-cache
+// Clears the template cache
+router.post('/clear-template-cache', async (req: Request, res: Response) => {
+  try {
+    templateEngine.clearCache();
+    res.json({
+      success: true,
+      message: 'Template cache cleared successfully'
+    });
+  } catch (error) {
+    console.error('Error clearing template cache:', error);
+    res.status(500).json({
+      success: false,
+      error: `Failed to clear template cache: ${error}`
     });
   }
 });

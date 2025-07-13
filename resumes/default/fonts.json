@@ -1,0 +1,38 @@
+{
+  "fonts": [
+    {
+      "name": "Montserrat",
+      "files": [
+        {
+          "weight": 400,
+          "style": "normal",
+          "file": "montserrat-regular.woff2",
+          "format": "woff2"
+        },
+        {
+          "weight": 600,
+          "style": "normal",
+          "file": "montserrat-bold.woff2",
+          "format": "woff2"
+        }
+      ]
+    },
+    {
+      "name": "Lato",
+      "files": [
+        {
+          "weight": 400,
+          "style": "normal",
+          "file": "lato-regular.ttf",
+          "format": "truetype"
+        },
+        {
+          "weight": 700,
+          "style": "normal",
+          "file": "lato-bold.ttf",
+          "format": "truetype"
+        }
+      ]
+    }
+  ]
+}

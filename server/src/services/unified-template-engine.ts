@@ -14,7 +14,8 @@ export interface TemplateContext {
 }
 
 export interface RenderedTemplate {
-  html: string;
+  html: string;           // Complete HTML document (existing)
+  htmlContent: string;    // Pure content without HTML wrapper (new)
   css: string;
   data: any;
   metadata: {
@@ -35,6 +36,7 @@ export interface ResumeData {
 export class UnifiedTemplateEngine {
   private static instance: UnifiedTemplateEngine;
   private compiledTemplates: Map<string, HandlebarsTemplateDelegate> = new Map();
+  private componentTemplates: Map<string, string> = new Map();
   private cssManager: CSSManager;
   private assetManager: AssetManager;
   private configManager: CSSConfigManager;
@@ -55,9 +57,9 @@ export class UnifiedTemplateEngine {
   }
 
   /**
-   * Main method to render a complete resume
+   * Render pure content without HTML wrapper (for component system)
    */
-  async renderResume(
+  async renderContent(
     resumeType: string,
     templateFlavor: string = 'default',
     context: Partial<TemplateContext> = {}
@@ -80,14 +82,15 @@ export class UnifiedTemplateEngine {
         await this.processAssetsForPDF(data);
       }
 
-      // 3. Render template
-      const html = await this.renderTemplate(templateFlavor, data);
+      // 3. Render template (pure content without HTML wrapper)
+      const htmlContent = await this.renderTemplate(templateFlavor, data);
 
       // 4. Get CSS
       const css = await this.cssManager.getCompleteCSS(fullContext);
 
       return {
-        html,
+        html: '', // Will be set by wrapper
+        htmlContent,
         css,
         data,
         metadata: {
@@ -98,8 +101,25 @@ export class UnifiedTemplateEngine {
         }
       };
     } catch (error) {
-      throw new Error(`Failed to render resume: ${error}`);
+      throw new Error(`Failed to render resume content: ${error}`);
     }
+  }
+
+  /**
+   * Main method to render a complete resume
+   */
+  async renderResume(
+    resumeType: string,
+    templateFlavor: string = 'default',
+    context: Partial<TemplateContext> = {}
+  ): Promise<RenderedTemplate> {
+    // Use the new renderContent method and wrap it for backward compatibility
+    const content = await this.renderContent(resumeType, templateFlavor, context);
+
+    // Create complete HTML document for backward compatibility
+    content.html = await this.createCompleteHTML(content.htmlContent, content.css);
+
+    return content;
   }
 
   /**
@@ -209,11 +229,27 @@ export class UnifiedTemplateEngine {
     if (context.forPDF && processedData.sidebar?.photo &&
         typeof processedData.sidebar.photo === 'string' &&
         !processedData.sidebar.photo.startsWith('data:')) {
-      const photoFilename = path.basename(processedData.sidebar.photo);
-      const photoPath = path.join(process.cwd(), 'assets', 'shared', photoFilename);
+
+      // Handle different path types
+      let photoPath: string;
+
+      if (processedData.sidebar.photo.startsWith('http://') ||
+          processedData.sidebar.photo.startsWith('https://')) {
+        // External URL - leave as-is for PDF (Puppeteer can handle external URLs)
+        return processedData;
+      } else if (path.isAbsolute(processedData.sidebar.photo)) {
+        // Absolute path - use as-is
+        photoPath = processedData.sidebar.photo;
+      } else {
+        // Relative path - resolve from project root
+        photoPath = path.join(process.cwd(), processedData.sidebar.photo);
+      }
+
       const dataUri = await this.assetManager.embedImageAsBase64(photoPath);
       if (dataUri) {
         processedData.sidebar.photo = dataUri;
+      } else {
+        console.warn(`Failed to convert photo to base64: ${photoPath}`);
       }
     }
 
@@ -267,6 +303,30 @@ export class UnifiedTemplateEngine {
   }
 
   /**
+   * Create complete HTML document from content and CSS
+   */
+  private async createCompleteHTML(htmlContent: string, css: string): Promise<string> {
+    return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/shared.css">
+  <link rel="stylesheet" href="resumes/styles/default.css">
+</head>
+<body class="bg-gray-50 font-sans text-gray-900">
+  ${htmlContent}
+</body>
+</html>`;
+  }
+
+  /**
    * Get compiled template
    */
   private async getCompiledTemplate(templateName: string): Promise<HandlebarsTemplateDelegate> {
@@ -274,13 +334,28 @@ export class UnifiedTemplateEngine {
       return this.compiledTemplates.get(templateName)!;
     }
 
-    const templatePath = path.join(process.cwd(), 'resumes', `${templateName}.html`);
+        // First try component-based template (directory with layout.html)
+    const componentTemplatePath = path.join(process.cwd(), 'resumes', templateName, 'layout.html');
 
-    if (!fs.existsSync(templatePath)) {
-      throw new Error(`Template not found: ${templatePath}`);
+    if (fs.existsSync(componentTemplatePath)) {
+      // Pre-load all components for this template
+      await this.preloadComponents(templateName);
+
+      const template = await fs.promises.readFile(componentTemplatePath, 'utf-8');
+      const compiledTemplate = Handlebars.compile(template);
+
+      this.compiledTemplates.set(templateName, compiledTemplate);
+      return compiledTemplate;
     }
 
-    const template = await fs.promises.readFile(templatePath, 'utf-8');
+    // Fallback to legacy monolithic template
+    const legacyTemplatePath = path.join(process.cwd(), 'resumes', `${templateName}.html`);
+
+    if (!fs.existsSync(legacyTemplatePath)) {
+      throw new Error(`Template not found: ${templateName} (checked ${componentTemplatePath} and ${legacyTemplatePath})`);
+    }
+
+    const template = await fs.promises.readFile(legacyTemplatePath, 'utf-8');
     const compiledTemplate = Handlebars.compile(template);
 
     this.compiledTemplates.set(templateName, compiledTemplate);
@@ -346,6 +421,26 @@ export class UnifiedTemplateEngine {
     Handlebars.registerHelper('startsWith', function(str: string, prefix: string) {
       return str && str.startsWith(prefix);
     });
+
+        // Component injection helper (synchronous)
+    Handlebars.registerHelper('component', function(this: any, componentName: string, options: any) {
+      const templateName = this.template || 'default';
+      const componentKey = `${templateName}:${componentName}`;
+
+      try {
+        const templateEngine = UnifiedTemplateEngine.getInstance();
+        const componentTemplate = templateEngine['getComponentTemplate'](componentKey);
+
+        if (!componentTemplate) {
+          throw new Error(`Component template not found: ${componentKey}`);
+        }
+
+        const compiledComponent = Handlebars.compile(componentTemplate);
+        return new Handlebars.SafeString(compiledComponent(this));
+      } catch (error: any) {
+        throw new Error(`Failed to render component '${componentName}' for template '${templateName}': ${error.message}`);
+      }
+    });
   }
 
   /**
@@ -370,10 +465,23 @@ export class UnifiedTemplateEngine {
       return ['default'];
     }
 
-    const files = await fs.promises.readdir(resumesDir);
-    return files
-      .filter(file => file.endsWith('.html'))
-      .map(file => path.basename(file, '.html'));
+    const entries = await fs.promises.readdir(resumesDir, { withFileTypes: true });
+    const templates: string[] = [];
+
+    for (const entry of entries) {
+      if (entry.isDirectory()) {
+        // Check if directory has a layout.html file (component-based template)
+        const layoutPath = path.join(resumesDir, entry.name, 'layout.html');
+        if (fs.existsSync(layoutPath)) {
+          templates.push(entry.name);
+        }
+      } else if (entry.isFile() && entry.name.endsWith('.html')) {
+        // Legacy monolithic template
+        templates.push(path.basename(entry.name, '.html'));
+      }
+    }
+
+    return templates.length > 0 ? templates : ['default'];
   }
 
   /**
@@ -424,6 +532,55 @@ export class UnifiedTemplateEngine {
     };
 
     return unicodeMap[iconType] || '•';
+  }
+
+  /**
+   * Load component template with template-specific override support
+   */
+  private async loadComponentTemplate(componentName: string, templateName: string = 'default'): Promise<string> {
+    // Load template-specific component
+    const templateSpecificPath = path.join(process.cwd(), 'resumes', templateName, `${componentName}.html`);
+
+    if (!fs.existsSync(templateSpecificPath)) {
+      throw new Error(`Component not found: ${componentName} for template: ${templateName} at path: ${templateSpecificPath}`);
+    }
+
+    return await fs.promises.readFile(templateSpecificPath, 'utf-8');
+  }
+
+  /**
+   * Get component template (synchronous version for Handlebars helpers)
+   */
+  private getComponentTemplate(componentKey: string): string | undefined {
+    return this.componentTemplates.get(componentKey);
+  }
+
+  /**
+   * Pre-load all components for a template
+   */
+  private async preloadComponents(templateName: string): Promise<void> {
+    const templateDir = path.join(process.cwd(), 'resumes', templateName);
+
+    if (!fs.existsSync(templateDir)) {
+      return;
+    }
+
+    const files = await fs.promises.readdir(templateDir);
+
+    for (const file of files) {
+      if (file.endsWith('.html') && file !== 'layout.html') {
+        const componentName = path.basename(file, '.html');
+        const componentKey = `${templateName}:${componentName}`;
+        const componentPath = path.join(templateDir, file);
+
+        try {
+          const componentContent = await fs.promises.readFile(componentPath, 'utf-8');
+          this.componentTemplates.set(componentKey, componentContent);
+        } catch (error) {
+          console.warn(`Failed to preload component ${componentName} for template ${templateName}:`, error);
+        }
+      }
+    }
   }
 
   /**

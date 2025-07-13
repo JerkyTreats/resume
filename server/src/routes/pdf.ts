@@ -2,13 +2,111 @@ import { Router, Request, Response } from 'express';
 import * as path from 'path';
 import * as fs from 'fs';
 import { PDFGenerator } from '../services/pdf-generator';
-import { validateResumeType } from '../middleware/validation';
+import { validateResumeType, validateResumeTypeQuery } from '../middleware/validation';
 import { GeneratePDFRequest, GeneratePDFResponse, ResumeTypesResponse, PerformanceMetrics } from '../types';
 import { PDFConfigManager } from '../config/pdf-config';
+import { UnifiedTemplateEngine } from '../services/unified-template-engine';
+import { CSSManager } from '../services/css-manager';
 
 const router = Router();
 const pdfGenerator = new PDFGenerator();
 const pdfConfigManager = PDFConfigManager.getInstance();
+const templateEngine = UnifiedTemplateEngine.getInstance();
+const cssManager = new CSSManager();
+
+/**
+ * @swagger
+ * /api/render-pdf-by-browser:
+ *   get:
+ *     summary: Render PDF-styled resume in browser for testing
+ *     tags: [PDF]
+ *     parameters:
+ *       - in: query
+ *         name: resumeType
+ *         schema:
+ *           type: string
+ *           enum: [staff_platform_engineer, eng_mgr, ai_lead]
+ *         required: true
+ *         description: The type of resume to render
+ *       - in: query
+ *         name: template
+ *         schema:
+ *           type: string
+ *           default: default
+ *         required: false
+ *         description: The template to use for rendering
+ *     responses:
+ *       200:
+ *         description: PDF-styled resume rendered successfully
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *       400:
+ *         description: Invalid request parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Rendering failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ */
+router.get('/render-pdf-by-browser', validateResumeTypeQuery, async (req: Request, res: Response) => {
+  try {
+    const { resumeType, template = 'default' } = req.query as { resumeType: string; template?: string };
+
+    console.log(`Rendering PDF-styled resume for browser: ${resumeType}, template: ${template}`);
+
+    // Render the resume content
+    const renderedResume = await templateEngine.renderResume(resumeType, template);
+
+    // Get PDF-specific CSS with embedded fonts
+    const cssContext = {
+      forPDF: true,
+      template,
+      includeFonts: true,
+      includeIcons: true
+    };
+    const cssContent = await cssManager.getCompleteCSS(cssContext);
+
+    // Create complete HTML with PDF styling
+    const completeHTML = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume - ${resumeType}</title>
+  <style>
+    ${cssContent}
+  </style>
+</head>
+<body>
+  ${renderedResume.htmlContent}
+</body>
+</html>`;
+
+    // Set content type to HTML
+    res.setHeader('Content-Type', 'text/html');
+    return res.send(completeHTML);
+
+  } catch (error) {
+    console.error('PDF-styled rendering error:', error);
+    return res.status(500).json({
+      error: 'Internal server error during PDF-styled rendering'
+    });
+  }
+});
 
 /**
  * @swagger

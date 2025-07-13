@@ -12,7 +12,6 @@ export interface CSSContext {
 export interface CSSAssembly {
   baseCSS: string;
   templateCSS: string;
-  pdfCSS: string;
   fontCSS: string;
   iconCSS: string;
   completeCSS: string;
@@ -69,22 +68,39 @@ export class CSSManager {
 
   private async assembleCSS(context: CSSContext): Promise<CSSAssembly> {
     const features = this.configManager.getFeatures();
+    const templateName = context.template || 'default';
 
-    const [baseCSS, templateCSS, pdfCSS, fontCSS, iconCSS] = await Promise.all([
+    // Debug logging for CSS assembly
+    if (process.env.NODE_ENV === 'development') {
+      console.log('CSS Assembly Context:', {
+        forPDF: context.forPDF,
+        template: templateName,
+        includeFonts: context.includeFonts,
+        includeIcons: context.includeIcons,
+        features: {
+          enablePDFOptimization: features.enablePDFOptimization,
+          enableFonts: features.enableFonts,
+          enableIcons: features.enableIcons
+        }
+      });
+    }
+
+    const [baseCSS, templateCSS, fontCSS, iconCSS, pdfFontCSS] = await Promise.all([
       this.loadBaseCSS(),
-      this.loadTemplateCSS(context.template || 'default'),
-      context.forPDF && features.enablePDFOptimization ? this.loadPDFCSS() : '',
-      context.includeFonts !== false && features.enableFonts ? this.loadFontCSS() : '',
-      context.includeIcons !== false && features.enableIcons ? this.loadIconCSS() : ''
+      this.loadTemplateCSS(templateName),
+      context.includeFonts !== false && features.enableFonts && !context.forPDF ? this.loadFontCSS() : '',
+      context.includeIcons !== false && features.enableIcons ? this.loadIconCSS() : '',
+      context.forPDF && features.enableFonts ? this.loadPDFFontCSS(templateName) : ''
     ]);
 
-    const completeCSS = this.combineCSS([baseCSS, templateCSS, pdfCSS, fontCSS, iconCSS]);
+    // For PDF, use PDF font CSS; for browser, use regular font CSS
+    const finalFontCSS = context.forPDF ? pdfFontCSS : fontCSS;
+    const completeCSS = this.combineCSS([baseCSS, templateCSS, finalFontCSS, iconCSS]);
 
     return {
       baseCSS,
       templateCSS,
-      pdfCSS,
-      fontCSS,
+      fontCSS: finalFontCSS,
       iconCSS,
       completeCSS
     };
@@ -100,104 +116,45 @@ export class CSSManager {
     return await this.readCSSFile(templateCSSPath);
   }
 
-  private async loadPDFCSS(): Promise<string> {
-    return `
-      /* PDF-specific styles */
-      @media print {
-        body {
-          margin: 0 !important;
-          padding: 0 !important;
-        }
-        .resume-content {
-          box-shadow: none !important;
-          margin: 0 !important;
-          padding: 0 !important;
-          min-height: auto !important;
-          height: auto !important;
-        }
-        * {
-          -webkit-print-color-adjust: exact !important;
-          color-adjust: exact !important;
-        }
 
-        /* Force proper layout in PDF */
-        .flex {
-          display: flex !important;
-        }
-        .flex-col {
-          flex-direction: column !important;
-        }
-        .w-1/3 {
-          width: 33.333333% !important;
-        }
-        .w-2/3 {
-          width: 66.666667% !important;
-        }
-        .flex-1 {
-          flex: 1 1 0% !important;
-        }
-      }
-    `;
-  }
 
   private async loadFontCSS(): Promise<string> {
-    // For PDF generation, we need to embed fonts as base64
-    const fontCSS = await this.loadLocalFontCSS();
-
-    return `
-      /* Font configuration */
-      ${fontCSS}
-
-      /* Font family definitions */
-      :root {
-        --font-heading: 'Montserrat', sans-serif;
-        --font-body: 'Lato', sans-serif;
-      }
-
-      /* Base font settings */
-      body {
-        font-family: var(--font-body);
-      }
-
-      /* Heading styles */
-      h1, h2, h3, h4, h5, h6 {
-        font-family: var(--font-heading);
-      }
-
-      /* Ensure fonts are loaded for PDF generation */
-      body {
-        font-family: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      }
-
-      h1, h2, h3, h4, h5, h6 {
-        font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      }
-    `;
+    // Browser-only font definitions
+    const fontConfigPath = path.join(process.cwd(), 'styles', 'fonts.css');
+    return await this.readCSSFile(fontConfigPath);
   }
 
-  private async loadLocalFontCSS(): Promise<string> {
-    try {
-      const fontsDir = path.join(process.cwd(), 'assets', 'fonts');
-      const fontFiles = [
-        { name: 'Montserrat', file: 'montserrat-regular.ttf', weight: 400 },
-        { name: 'Montserrat', file: 'montserrat-bold.ttf', weight: 600 },
-        { name: 'Lato', file: 'lato-regular.ttf', weight: 400 },
-        { name: 'Lato', file: 'lato-bold.ttf', weight: 700 }
-      ];
+  private async loadPDFFontCSS(templateName: string = 'default'): Promise<string> {
+    // PDF-only base64 font embedding - bulletproof, no fallbacks
+    const fontConfigPath = path.join(process.cwd(), 'resumes', templateName, 'fonts.json');
 
+    try {
+      if (!fs.existsSync(fontConfigPath)) {
+        throw new Error(`Font configuration not found for template '${templateName}': ${fontConfigPath}`);
+      }
+
+      const fontConfig = JSON.parse(await fs.promises.readFile(fontConfigPath, 'utf-8'));
+      const fontsDir = path.join(process.cwd(), 'assets', 'fonts');
       let fontCSS = '';
 
-      for (const font of fontFiles) {
-        const fontPath = path.join(fontsDir, font.file);
-        if (fs.existsSync(fontPath)) {
+      for (const font of fontConfig.fonts) {
+        for (const fontFile of font.files) {
+          const fontPath = path.join(fontsDir, fontFile.file);
+
+          if (!fs.existsSync(fontPath)) {
+            throw new Error(`Font file not found: ${fontPath}`);
+          }
+
           const fontBuffer = await fs.promises.readFile(fontPath);
           const base64 = fontBuffer.toString('base64');
+          const mimeType = fontFile.format === 'woff2' ? 'font/woff2' : 'font/truetype';
+
           fontCSS += `
 @font-face {
   font-family: '${font.name}';
-  src: url('data:font/truetype;base64,${base64}') format('truetype');
-  font-weight: ${font.weight};
-  font-style: normal;
+  src: url('data:${mimeType};base64,${base64}') format('${fontFile.format}');
+  font-weight: ${fontFile.weight};
+  font-style: ${fontFile.style};
   font-display: swap;
 }`;
         }
@@ -205,40 +162,13 @@ export class CSSManager {
 
       return fontCSS;
     } catch (error) {
-      console.error('Failed to load local fonts:', error);
-      // Fallback to Google Fonts
-      return `
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Lato:wght@300;400;700&display=swap');
-      `;
+      throw new Error(`Failed to load fonts for template '${templateName}': ${error}`);
     }
   }
 
   private async loadIconCSS(): Promise<string> {
-    return `
-      /* SVG icon styling for PDF */
-      img[src^="data:image/svg+xml"] {
-        width: 1em !important;
-        height: 1em !important;
-        vertical-align: middle !important;
-        display: inline-block !important;
-      }
-
-      /* Enhanced emoji support */
-      .emoji,
-      [data-emoji="true"] {
-        font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Android Emoji', 'EmojiSymbols', 'EmojiOne Mozilla', 'Twemoji Mozilla', sans-serif;
-        font-feature-settings: "emoji";
-        font-variant-emoji: emoji;
-      }
-
-      /* Ensure emojis in contact info are properly styled */
-      .resume-content .text-sm .emoji,
-      .resume-content .text-sm [data-emoji="true"] {
-        font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Android Emoji', 'EmojiSymbols', 'EmojiOne Mozilla', 'Twemoji Mozilla', sans-serif;
-        font-feature-settings: "emoji";
-        font-variant-emoji: emoji;
-      }
-    `;
+    const iconCSSPath = path.join(process.cwd(), 'styles', 'icons.css');
+    return await this.readCSSFile(iconCSSPath);
   }
 
   private async readCSSFile(filePath: string): Promise<string> {
@@ -255,9 +185,19 @@ export class CSSManager {
   }
 
   private combineCSS(cssParts: string[]): string {
-    return cssParts
-      .filter(css => css.trim().length > 0)
-      .join('\n\n');
+    const filteredParts = cssParts.filter(css => css.trim().length > 0);
+
+    // Debug logging for CSS assembly
+    if (process.env.NODE_ENV === 'development') {
+      console.log('CSS Assembly Parts:');
+      console.log('- Base CSS length:', cssParts[0]?.length || 0);
+      console.log('- Template CSS length:', cssParts[1]?.length || 0);
+      console.log('- Font CSS length:', cssParts[2]?.length || 0);
+      console.log('- Icon CSS length:', cssParts[3]?.length || 0);
+      console.log('- Total combined length:', filteredParts.join('\n\n').length);
+    }
+
+    return filteredParts.join('\n\n');
   }
 
   clearCache(): void {

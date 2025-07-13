@@ -100,8 +100,6 @@ router.post('/clear', (req: Request, res: Response) => {
  *                       type: string
  *                     templateCSS:
  *                       type: string
- *                     pdfCSS:
- *                       type: string
  *                     fontCSS:
  *                       type: string
  *                     iconCSS:

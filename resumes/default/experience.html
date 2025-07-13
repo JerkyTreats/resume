@@ -1,0 +1,18 @@
+<!-- Experience Component -->
+<div class="flex-1 px-10 pt-8">
+  <h2 class="text-2xl font-bold" style="color: {{styling.colors.textPrimary}}">{{main.experience.title}}</h2>
+  <hr class="page-break-line">
+
+  {{#each main.experience.jobs}}
+  <div class="{{#ifFirst @index}}mt-4{{else}}mt-6{{/ifFirst}}">
+    <div class="flex justify-between">
+      <div>
+        <h3 class="font-semibold text-md">{{title}}</h3>
+        <p class="text-base font-medium" style="color: {{../styling.colors.textAccent}}">{{company}}</p>
+      </div>
+      <p class="text-sm">{{startDate}} – {{endDate}}</p>
+    </div>
+    <div class="text-sm mt-1 markdown-content">{{{markdown content}}}</div>
+  </div>
+  {{/each}}
+</div>

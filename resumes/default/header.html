@@ -1,0 +1,24 @@
+<!-- Header Component -->
+<div class="pt-6 px-10">
+  <h1 class="text-4xl font-semibold mb-2" style="color: {{styling.colors.textPrimary}}">{{header.name}}</h1>
+  <p class="text-2xl font-normal mb-3" style="color: {{styling.colors.textAccent}}">{{header.title}}</p>
+
+  <div class="text-sm mt-2" style="color: {{styling.colors.textSecondary}}">
+    <div class="flex gap-12">
+      <div class="space-y-2">
+        <div class="flex items-center">{{{icon "email"}}} <span class="ml-1">{{header.email}}</span></div>
+        <div class="flex items-center">{{{icon "location"}}} <span class="ml-1">{{header.location}}</span></div>
+      </div>
+      <div class="space-y-2">
+        <div class="flex items-center">{{{icon "link"}}} <a href="{{header.linkedin}}" style="color: {{styling.colors.textAccent}}" class="underline ml-1">LinkedIn</a></div>
+        <div class="flex items-center">{{{icon "github"}}} <a href="{{header.github}}" style="color: {{styling.colors.textAccent}}" class="underline ml-1">GitHub</a></div>
+      </div>
+      <div class="space-y-2">
+        <div class="flex items-center">{{{icon "website"}}} <a href="{{header.website}}" style="color: {{styling.colors.textAccent}}" class="underline ml-1">{{header.website}}</a></div>
+        {{#if header.phone}}
+        <div class="flex items-center">{{{icon "phone"}}} <span class="ml-1">{{header.phone}}</span></div>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>

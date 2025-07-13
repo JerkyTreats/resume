@@ -1,0 +1,26 @@
+/* Browser-only font definitions - PDF uses base64 embedding */
+
+/* Font family definitions for browser */
+:root {
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body: 'Lato', sans-serif;
+}
+
+/* Base font settings for browser */
+body {
+  font-family: var(--font-body);
+}
+
+/* Heading styles for browser */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* Browser font fallbacks */
+body {
+  font-family: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}

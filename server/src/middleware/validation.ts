@@ -83,3 +83,24 @@ export function validateResumeType(req: Request, res: Response, next: NextFuncti
 
   next();
 }
+
+export function validateResumeTypeQuery(req: Request, res: Response, next: NextFunction): void {
+  const resumeType = req.query.resumeType as string;
+  const validTypes = ['staff_platform_engineer', 'eng_mgr', 'ai_lead'];
+
+  if (!resumeType) {
+    res.status(400).json({
+      error: 'resumeType is required'
+    });
+    return;
+  }
+
+  if (!validTypes.includes(resumeType)) {
+    res.status(400).json({
+      error: `Invalid resumeType. Must be one of: ${validTypes.join(', ')}`
+    });
+    return;
+  }
+
+  next();
+}

@@ -5,16 +5,19 @@ import { PDFDocument } from 'pdf-lib';
 import { PDFOptions, PDFGenerationResult, ResumeType } from '../types';
 import { UnifiedTemplateEngine } from './unified-template-engine';
 import { PDFConfigManager } from '../config/pdf-config';
+import { ContentWrapper } from './content-wrapper';
 
 export class PDFGenerator {
   private browser: Browser | null = null;
   private performanceMetrics: Map<string, number> = new Map();
   private templateEngine: UnifiedTemplateEngine;
   private pdfConfigManager: PDFConfigManager;
+  private contentWrapper: ContentWrapper;
 
   constructor() {
     this.templateEngine = UnifiedTemplateEngine.getInstance();
     this.pdfConfigManager = PDFConfigManager.getInstance();
+    this.contentWrapper = ContentWrapper.getInstance();
   }
 
   async initialize(): Promise<void> {
@@ -70,8 +73,8 @@ export class PDFGenerator {
         includeIcons: true
       });
 
-      // Create complete HTML with inline CSS
-      const completeHTML = await this.createCompleteHTML(renderedResume);
+      // Create complete HTML with inline CSS using ContentWrapper
+      const completeHTML = await this.contentWrapper.wrapForPDF(renderedResume);
 
       // Set content directly instead of navigating to URL
       await page.setContent(completeHTML, {
@@ -171,30 +174,9 @@ export class PDFGenerator {
     }
   }
 
-    private async createCompleteHTML(renderedResume: any): Promise<string> {
-    // Extract the HTML content and CSS from the rendered resume
-    const htmlContent = renderedResume.html;
-    const cssContent = renderedResume.css;
 
-    // Create complete HTML with CSS manager providing all styling
-    const completeHTML = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resume</title>
-  <style>
-    ${cssContent}
-  </style>
-</head>
-<body>
-  ${htmlContent}
-</body>
-</html>`;
 
-    return completeHTML;
-  }
+
 
   private async optimizePDF(buffer: Buffer): Promise<Buffer> {
     try {

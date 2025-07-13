@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/shared.css">
+  <link rel="stylesheet" href="resumes/styles/default.css">
+</head>
+<body class="bg-gray-50 font-sans text-gray-900">
+  <!-- Layout Template with Component Injection -->
+<div class="resume-content flex mx-auto bg-white shadow-lg relative max-w-5xl">
+  <!-- Dark top trim -->
+  <div class="absolute top-0 left-0 w-full h-4 z-10" style="background-color: #1a4240"></div>
+
+  <!-- Sidebar -->
+  <div class="text-white relative flex flex-col w-1/3" style="background-color: #2a6465">
+    <div class="pt-14 px-6">
+      <div class="flex justify-center mb-8">
+        <img src="assets/shared/justin_green.jpeg" alt="Profile photo" class="w-32 h-32 rounded-full border-4 border-white object-cover">
+      </div>
+    </div>
+
+    <div class="flex-1 px-6">
+      <!-- Summary Component -->
+      <!-- Summary Component -->
+<h2 class="text-2xl font-bold">SUMMARY</h2>
+<hr class="page-break-line">
+<div class="text-sm mt-2 markdown-content"><p>Platform Engineering Manager with over 15 years of experience.</p>
+<p>Managed fleets of Kubernetes clusters gracefully handling 14k RPS across 1400+ domains.</p>
+<p>Managed incredible Platform Infrastructure team ensuring reliable, secure, performant cloud infrastructure for global-scale services.</p>
+</div>
+
+
+      <!-- Skills Component -->
+      <!-- Skills Component -->
+<h2 class="text-2xl font-bold">SKILLS</h2>
+<hr class="page-break-line">
+<div class="grid grid-cols-1 gap-y-0 text-sm mt-2">
+  <div>
+    <div class="markdown-content"><h1>Cloud Infrastructure</h1>
+<ul>
+<li>Google Cloud (GCP) / AWS</li>
+<li>Docker, Kubernetes (K8s)</li>
+<li>ArgoCD, Helm, Terraform</li>
+<li>MongoDB, SQL, Redis, Elasticsearch</li>
+<li>Golang, Node.js, Python, Bash</li>
+</ul>
+</div>
+  </div>
+  <div>
+    <div class="markdown-content"><h1>SRE</h1>
+<ul>
+<li>On-call triage, remediation, postmortem + prevention</li>
+</ul>
+</div>
+  </div>
+  <div>
+    <div class="markdown-content"><h1>Secrets/Access Management</h1>
+<ul>
+<li>Cloud Security; Config Connector</li>
+</ul>
+</div>
+  </div>
+  <div>
+    <div class="markdown-content"><h1>Edge Compute/Cache</h1>
+<ul>
+<li>Fastly + VCL, DNS, traffic shaping + bot management</li>
+</ul>
+</div>
+  </div>
+  <div>
+    <div class="markdown-content"><h1>Engineering Management</h1>
+<ul>
+<li>Roadmap, project, capacity planning</li>
+<li>Hiring, onboarding, managing direct reports</li>
+<li>Presentations, reporting to upper management</li>
+</ul>
+</div>
+  </div>
+  <div>
+    <div class="markdown-content"><h1>General</h1>
+<ul>
+<li>Advocate for cross-team communication, collaboration, alignment.</li>
+<li>Strong believer in iterative improvement, data-driven decision making.</li>
+<li>Genuine love for documentation.</li>
+</ul>
+</div>
+  </div>
+</div>
+
+    </div>
+
+    <div class="pb-6"></div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex flex-col w-2/3">
+    <!-- Header Component -->
+    <!-- Header Component -->
+<div class="pt-6 px-10">
+  <h1 class="text-4xl font-semibold mb-2" style="color: #000000">JUSTIN NEARING</h1>
+  <p class="text-2xl font-normal mb-3" style="color: #0e7490">Scaling Reliable Systems</p>
+
+  <div class="text-sm mt-2" style="color: #6b7280">
+    <div class="flex gap-12">
+      <div class="space-y-2">
+        <div class="flex items-center"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNiAzNiI+PHBhdGggZmlsbD0iI0NDRDZERCIgZD0iTTM2IDI3YzAgMi4yMDktMS43OTEgNC00IDRINGMtMi4yMDkgMC00LTEuNzkxLTQtNFY5YzAtMi4yMDkgMS43OTEtNCA0LTRoMjhjMi4yMDkgMCA0IDEuNzkxIDQgNHYxOHoiLz48cGF0aCBmaWxsPSIjOTlBQUI1IiBkPSJNMTEuOTUgMTcuNjM2TC42MzcgMjguOTQ5Yy0uMDI3LjAyOC0uMDM3LjA2My0uMDYuMDkxLjM0LjU3LjgxNCAxLjA0MyAxLjM4NCAxLjM4NC4wMjktLjAyMy4wNjMtLjAzMy4wOS0uMDZMMTMuMzY1IDE5LjA1Yy4zOS0uMzkxLjM5LTEuMDIzIDAtMS40MTQtLjM5Mi0uMzkxLTEuMDI0LS4zOTEtMS40MTUgME0zNS40MjMgMjkuMDRjLS4wMjEtLjAyOC0uMDMzLS4wNjMtLjA2LS4wOUwyNC4wNTEgMTcuNjM2Yy0uMzkyLS4zOTEtMS4wMjQtLjM5MS0xLjQxNSAwcy0uMzkxIDEuMDIzIDAgMS40MTRsMTEuMzEzIDExLjMxNGMuMDI2LjAyNi4wNjIuMDM3LjA5LjA2LjU3MS0uMzQgMS4wNDQtLjgxNCAxLjM4NC0xLjM4NCIvPjxwYXRoIGZpbGw9IiM5OUFBQjUiIGQ9Ik0zMiA1SDRDMS43OTEgNSAwIDYuNzkxIDAgOXYxLjAzbDE0LjUyOCAxNC40OTZjMS44OTQgMS44OTMgNC45ODggMS44OTMgNi44ODQgMEwzNiAxMC4wMDlWOWMwLTIuMjA5LTEuNzkxLTQtNC00eiIvPjxwYXRoIGZpbGw9IiNFMUU4RUQiIGQ9Ik0zMiA1SDRDMi40MTIgNSAxLjA1MSA1LjkzNC40MDUgNy4yNzVsMTQuNzY2IDE0Ljc2N2MxLjU2MiAxLjU2MiA0LjA5NiAxLjU2MiA1LjY1NyAwTDM1LjU5NSA3LjI3NUMzNC45NDkgNS45MzQgMzMuNTg5IDUgMzIgNXoiLz48cGF0aCBmaWxsPSIjNjY3NTdGIiBkPSJNMTUgOS4yN2MwLS43My4zNjUtMS4yNyAxLTEuMjdoMy42MmMuODM5IDAgMS4xNzQuNDkgMS4xNzQgMSAwIC40OTYtLjM0OSAxLTEuMDM1IDFoLTIuNzA4djJoMi41MzNjLjcxNiAwIDEuMDY1LjQ4OSAxLjA2NSAxIDAgLjQ5Ni0uMzY2IDEtMS4wNjUgMWgtMi41MzN2MmgyLjg0Yy42OTkgMCAxLjAzNy40ODkgMS4wMzcgMSAwIC40OTYtLjM1MyAxLTEuMDM3IDFoLTMuNzY2QzE1LjQ4MiAxOCAxNSAxNy40NjkgMTUgMTYuODEyVjkuMjd6Ii8+PC9zdmc+" alt="email" style="width: 1em; height: 1em; vertical-align: middle; display: inline-block;"> <span class="ml-1">justin@jerkytreats.dev</span></div>
+        <div class="flex items-center"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNiAzNiI+PGVsbGlwc2UgZmlsbD0iIzI5MkYzMyIgY3g9IjE4IiBjeT0iMzQuNSIgcng9IjQiIHJ5PSIxLjUiLz48cGF0aCBmaWxsPSIjOTlBQUI1IiBkPSJNMTQuMzM5IDEwLjcyNVMxNi44OTQgMzQuOTk4IDE4LjAwMSAzNWMxLjEwNi4wMDEgMy42Ni0yNC4yNzUgMy42Ni0yNC4yNzVoLTcuMzIyeiIvPjxjaXJjbGUgZmlsbD0iI0REMkU0NCIgY3g9IjE4IiBjeT0iOCIgcj0iOCIvPjwvc3ZnPg==" alt="location" style="width: 1em; height: 1em; vertical-align: middle; display: inline-block;"> <span class="ml-1">Vancouver, BC</span></div>
+      </div>
+      <div class="space-y-2">
+        <div class="flex items-center"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNiAzNiI+PHBhdGggZmlsbD0iIzg4OTlBNiIgZD0iTTE1IDlsNi02czYtNiAxMiAwIDAgMTIgMCAxMmwtOCA4cy02IDYtMTIgMGMtMS4xMjUtMS4xMjUtMS44MjItMi42Mi0xLjgyMi0yLjYybDMuMzUzLTMuMzQ4UzE0LjM5NiAxOC4zOTYgMTYgMjBjMCAwIDMgMyA2IDBsOC04czMtMyAwLTYtNiAwLTYgMGwtMy43MjkgMy43MjlzLTEuODU0LTEuNTIxLTUuNjQ2LS4zNTRMMTUgOXoiLz48cGF0aCBmaWxsPSIjODg5OUE2IiBkPSJNMjAuODQ1IDI3bC02IDZzLTYgNi0xMiAwIDAtMTIgMC0xMmw4LThzNi02IDEyIDBjMS4xMjUgMS4xMjUgMS44MjIgMi42MiAxLjgyMiAyLjYybC0zLjM1NCAzLjM0OXMuMTM1LTEuMzY1LTEuNDY5LTIuOTY5YzAgMC0zLTMtNiAwbC04IDhzLTMgMyAwIDYgNiAwIDYgMGwzLjcyOS0zLjcyOXMxLjg1NCAxLjUyMSA1LjY0Ni4zNTRsLS4zNzQuMzc1eiIvPjwvc3ZnPg==" alt="link" style="width: 1em; height: 1em; vertical-align: middle; display: inline-block;"> <a href="https://linkedin.com/in/justinnearing" style="color: #0e7490" class="underline ml-1">LinkedIn</a></div>
+        <div class="flex items-center"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNiAzNiI+PHBhdGggZmlsbD0iI0NDRDZERCIgZD0iTTM0IDI5LjA5NmMtLjQxNy0uOTYzLS44OTYtMi4wMDgtMi0yLjAwOGgtMWMxLjEwNCAwIDItLjg5OSAyLTIuMDA4VjguMDA4QzMzIDYuODk5IDMyLjEwNCA2IDMxIDZINWMtMS4xMDQgMC0yIC44OTktMiAyLjAwOFYyNS4wOGMwIDEuMTA5Ljg5NiAyLjAwOCAyIDIuMDA4SDRjLTEuMTA0IDAtMS42NjcgMS4wMDQtMiAyLjAwOGwtMiA0Ljg5NUMwIDM1LjEwMS44OTYgMzYgMiAzNmgzMmMxLjEwNCAwIDItLjg5OSAyLTIuMDA4bC0yLTQuODk2eiIvPjxwYXRoIGZpbGw9IiM5QUFBQjQiIGQ9Ik0uMDA4IDM0LjA3NWwuMDA2LjA1Ny4xNy42OTJDLjUgMzUuNTE2IDEuMTkyIDM2IDIgMzZoMzJjMS4wNzYgMCAxLjk0Ny0uODU1IDEuOTkyLTEuOTI1SC4wMDh6Ii8+PHBhdGggZmlsbD0iIzVEQURFQyIgZD0iTTMxIDI0LjA3NWMwIC41NTUtLjQ0NyAxLjAwNC0xIDEuMDA0SDZjLS41NTIgMC0xLS40NDktMS0xLjAwNFY5LjAxM2MwLS41NTUuNDQ4LTEuMDA0IDEtMS4wMDRoMjRjLjU1MyAwIDEgLjQ1IDEgMS4wMDR2MTUuMDYyeiIvPjxwYXRoIGZpbGw9IiNBRUJCQzEiIGQ9Ik0zMi45MDYgMzEuMDQybC0uNzYtMi4xNzVjLS4yMzktLjQ2LS42MzUtLjgzNy0xLjE4OC0uODM3SDUuMTFjLS41NTIgMC0uOTA2LjQwOC0xLjE1NiAxLjAzNmwtLjY4OCAxLjk3N2MtLjIxOS41OTYuNDQ4IDEuMDA0IDEgMS4wMDRoNy41NzhzLjkzNy0uMDQ3IDEuMTAzLS42MDhjLjE5Mi0uNjQ4LjQxNS0xLjYyNC40NjMtMS43OTYuMDc0LS4yNjQuMzg4LS41MzEuODU2LS41MzFoOC41NzhjLjUgMCAuNzQ2LjI1My44MTEuNTY2LjA0Mi4yMDQuMzEyIDEuMTQxLjQzOCAxLjc4Mi4xMTEuNTcxIDEuMjIxLjU4NiAxLjIyMS41ODZoNi41OTRjLjU1MSAwIDEuMjE3LS40NzEuOTk4LTEuMDA0eiIvPjxwYXRoIGZpbGw9IiM5QUFBQjQiIGQ9Ik0yMi4zNzUgMzMuMTEzaC03Ljc4MWMtLjM3NSAwLS41MzgtLjM0My0uNDg0LS42NzUuMDU0LS4zMzEuMzU5LTEuNzkzLjM4My0xLjk2My4wMjMtLjE3MS4yNzQtLjM3NS41MjQtLjM3NWg3LjAxNWMuMjk3IDAgLjQ5LjE2My41NS40ODkuMDU5LjMyNy4zMDIgMS42NDEuMzIxIDEuOTQxLjAxOS4zMDEtLjE2OS41ODMtLjUyOC41ODN6Ii8+PC9zdmc+" alt="github" style="width: 1em; height: 1em; vertical-align: middle; display: inline-block;"> <a href="https://github.com/jerkytreats" style="color: #0e7490" class="underline ml-1">GitHub</a></div>
+      </div>
+      <div class="space-y-2">
+        <div class="flex items-center"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNiAzNiI+PHBhdGggZmlsbD0iIzNCODhDMyIgZD0iTTE4IDBDOC4wNTkgMCAwIDguMDU5IDAgMThzOC4wNTkgMTggMTggMTggMTgtOC4wNTkgMTgtMThTMjcuOTQxIDAgMTggMHpNMi4wNSAxOWgzLjk4M2MuMDkyIDIuNTA2LjUyMiA0Ljg3MSAxLjIyOSA3SDQuMTU4Yy0xLjIwNy0yLjA4My0xLjk1LTQuNDU5LTIuMTA4LTd6TTE5IDhWMi4wODFjMi43NDcuNDM2IDUuMTYyIDIuNjU1IDYuNzk5IDUuOTE5SDE5em03LjY1MSAyYy43NTQgMi4wODMgMS4yMTkgNC40NiAxLjMxNyA3SDE5di03aDcuNjUxek0xNyAyLjA4MVY4aC02Ljc5OUMxMS44MzcgNC43MzYgMTQuMjUzIDIuNTE3IDE3IDIuMDgxek0xNyAxMHY3SDguMDMyYy4wOTgtMi41NC41NjMtNC45MTcgMS4zMTctN0gxN3pNNi4wMzQgMTdIMi4wNWMuMTU4LTIuNTQuOTAxLTQuOTE3IDIuMTA3LTdoMy4xMDRjLS43MDUgMi4xMjktMS4xMzUgNC40OTUtMS4yMjcgN3ptMS45OTggMkgxN3Y3SDkuMzQ5Yy0uNzU0LTIuMDgzLTEuMjE5LTQuNDU5LTEuMzE3LTd6TTE3IDI4djUuOTE5Yy0yLjc0Ny0uNDM3LTUuMTYzLTIuNjU1LTYuNzk5LTUuOTE5SDE3em0yIDUuOTE5VjI4aDYuOGMtMS42MzcgMy4yNjQtNC4wNTMgNS40ODItNi44IDUuOTE5ek0xOSAyNnYtN2g4Ljk2OWMtLjA5OSAyLjU0MS0uNTYzIDQuOTE3LTEuMzE3IDdIMTl6bTEwLjk2Ny03aDMuOTgyYy0uMTU3IDIuNTQxLS45IDQuOTE3LTIuMTA3IDdoLTMuMTA0Yy43MDYtMi4xMjkgMS4xMzYtNC40OTQgMS4yMjktN3ptMC0yYy0uMDkzLTIuNTA1LS41MjMtNC44NzEtMS4yMjktN2gzLjEwNGMxLjIwNyAyLjA4MyAxLjk1IDQuNDYgMi4xMDcgN2gtMy45ODJ6bS41MTItOWgtMi41MDNjLS43MTctMS42MDQtMS42MDYtMy4wMTUtMi42MTktNC4xOTlDMjcuMzQ2IDQuODMzIDI5LjA4OSA2LjI2NyAzMC40NzkgOHpNMTAuNjQzIDMuODAxQzkuNjI5IDQuOTg1IDguNzQgNi4zOTYgOC4wMjMgOEg1LjUyMWMxLjM5LTEuNzMzIDMuMTMzLTMuMTY2IDUuMTIyLTQuMTk5ek01LjUyMSAyOGgyLjUwM2MuNzE2IDEuNjA0IDEuNjA1IDMuMDE1IDIuNjE5IDQuMTk4QzguNjU0IDMxLjE2NiA2LjkxMSAyOS43MzMgNS41MjEgMjh6bTE5LjgzNiA0LjE5OGMxLjAxNC0xLjE4NCAxLjkwMi0yLjU5NCAyLjYxOS00LjE5OGgyLjUwM2MtMS4zOSAxLjczMy0zLjEzMyAzLjE2Ni01LjEyMiA0LjE5OHoiLz48L3N2Zz4=" alt="website" style="width: 1em; height: 1em; vertical-align: middle; display: inline-block;"> <a href="https://jerkytreats.dev" style="color: #0e7490" class="underline ml-1">https://jerkytreats.dev</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <!-- Experience Component -->
+    <!-- Experience Component -->
+<div class="flex-1 px-10 pt-8">
+  <h2 class="text-2xl font-bold" style="color: #000000">EXPERIENCE</h2>
+  <hr class="page-break-line">
+
+  <div class="mt-4">
+    <div class="flex justify-between">
+      <div>
+        <h3 class="font-semibold text-md">Staff Platform Engineer</h3>
+        <p class="text-base font-medium" style="color: #0e7490">VerticalScope Inc.</p>
+      </div>
+      <p class="text-sm">05/2024 – 06/2025</p>
+    </div>
+    <div class="text-sm mt-1 markdown-content"><ul>
+<li>Managed senior Platform Engineers to gracefully handle 14k RPS across 1400+ domains.</li>
+<li>Developed core platform strategy of Security, Reliability, Developer Experience.</li>
+<li>Led iterative improvement, data-driven decision-making, and metrics tracking.</li>
+<li>Promoted blameless postmortem culture and consistent communication standards.</li>
+</ul>
+<p><strong>Technical Details:</strong></p>
+<ul>
+<li>Edge infra @ 14k RPS / 1400+ domains, Fastly + VCL</li>
+<li>Multi-cluster Kubernetes w/ Istio ingress, Helm, Terraform</li>
+<li>GitOps via ArgoCD; SlackOps in Go; GitHub Actions</li>
+<li>Monitoring: Prometheus, Grafana, Kibana, OTEL, Honeycomb</li>
+<li>On-call rotation included</li>
+</ul>
+</div>
+  </div>
+  <div class="mt-6">
+    <div class="flex justify-between">
+      <div>
+        <h3 class="font-semibold text-md">Lead Software Engineer</h3>
+        <p class="text-base font-medium" style="color: #0e7490">Kabam Games Inc.</p>
+      </div>
+      <p class="text-sm">06/2017 – 05/2023</p>
+    </div>
+    <div class="text-sm mt-1 markdown-content"><ul>
+<li>Led infra overhaul across 5 business critical products with 0 downtime</li>
+<li>Scaled Unity backend infra for &gt;1M MAU</li>
+<li>Migrated VMs → Kubernetes; built CI/CD pipelines</li>
+<li>Managed sensitive DB upgrades + SRE rotations</li>
+</ul>
+</div>
+  </div>
+  <div class="mt-6">
+    <div class="flex justify-between">
+      <div>
+        <h3 class="font-semibold text-md">DevOps Lead</h3>
+        <p class="text-base font-medium" style="color: #0e7490">LemonStand</p>
+      </div>
+      <p class="text-sm">09/2016 – 04/2017</p>
+    </div>
+    <div class="text-sm mt-1 markdown-content"><ul>
+<li>Overhauled local + Linux AWS environments</li>
+<li>Streamlined dev onboarding and monitoring</li>
+</ul>
+</div>
+  </div>
+  <div class="mt-6">
+    <div class="flex justify-between">
+      <div>
+        <h3 class="font-semibold text-md">Automation Engineer</h3>
+        <p class="text-base font-medium" style="color: #0e7490">United Front Games</p>
+      </div>
+      <p class="text-sm">07/2015 – 05/2016</p>
+    </div>
+    <div class="text-sm mt-1 markdown-content"><ul>
+<li>Launched 20+ minute Unity builds in under 5 mins</li>
+<li>Built one-step CI for AAA games</li>
+</ul>
+</div>
+  </div>
+</div>
+
+  </div>
+</div>
+
+</body>
+</html>

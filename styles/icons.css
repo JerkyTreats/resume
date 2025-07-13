@@ -1,0 +1,23 @@
+/* SVG icon styling for PDF */
+img[src^="data:image/svg+xml"] {
+  width: 1em !important;
+  height: 1em !important;
+  vertical-align: middle !important;
+  display: inline-block !important;
+}
+
+/* Enhanced emoji support */
+.emoji,
+[data-emoji="true"] {
+  font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Android Emoji', 'EmojiSymbols', 'EmojiOne Mozilla', 'Twemoji Mozilla', sans-serif;
+  font-feature-settings: "emoji";
+  font-variant-emoji: emoji;
+}
+
+/* Ensure emojis in contact info are properly styled */
+.resume-content .text-sm .emoji,
+.resume-content .text-sm [data-emoji="true"] {
+  font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Android Emoji', 'EmojiSymbols', 'EmojiOne Mozilla', 'Twemoji Mozilla', sans-serif;
+  font-feature-settings: "emoji";
+  font-variant-emoji: emoji;
+}

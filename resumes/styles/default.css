@@ -32,49 +32,265 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
 }
 
-/* Tailwind CSS utilities for PDF generation */
-.flex { display: flex; }
-.flex-col { flex-direction: column; }
-.w-1\/3 { width: 33.333333%; }
-.w-2\/3 { width: 66.666667%; }
-.flex-1 { flex: 1 1 0%; }
-.items-center { align-items: center; }
-.gap-12 { gap: 3rem; }
-.space-y-2 > * + * { margin-top: 0.5rem; }
-.ml-1 { margin-left: 0.25rem; }
-.pt-6 { padding-top: 1.5rem; }
-.px-10 { padding-left: 2.5rem; padding-right: 2.5rem; }
-.text-2xl { font-size: 1.5rem; }
-.font-bold { font-weight: 700; }
-.font-semibold { font-weight: 600; }
-.text-md { font-size: 1rem; }
-.text-base { font-size: 1rem; }
-.font-medium { font-weight: 500; }
-.text-sm { font-size: 0.875rem; }
-.mt-4 { margin-top: 1rem; }
-.mt-6 { margin-top: 1.5rem; }
-.mt-1 { margin-top: 0.25rem; }
-.mt-2 { margin-top: 0.5rem; }
-.justify-between { justify-content: space-between; }
-.text-white { color: white; }
-.bg-gray-800 { background-color: #1f2937; }
-.min-h-screen { min-height: 100vh; }
-.resume-content { background: white; }
-
-/* Profile picture sizing for PDF */
-.sidebar img {
-  max-width: 120px !important;
-  max-height: 120px !important;
-  width: auto !important;
-  height: auto !important;
-  object-fit: cover !important;
-  border-radius: 50% !important;
+/* Resume content container */
+.resume-content {
+  background: white;
+  display: flex;
+  margin: 0 auto;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  position: relative;
+  max-width: 64rem;
 }
 
-/* Ensure proper text colors in PDF */
-.text-primary { color: #000000; }
-.text-secondary { color: #4a5568; }
-.text-accent { color: #0e7490; }
+/* Layout utilities */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-1 {
+  flex: 1 1 0%;
+}
+
+/* Width utilities */
+.w-1\/3 {
+  width: 33.333333%;
+}
+
+.w-2\/3 {
+  width: 66.666667%;
+}
+
+.w-full {
+  width: 100%;
+}
+
+/* Height utilities */
+.h-4 {
+  height: 1rem;
+}
+
+/* Positioning utilities */
+.absolute {
+  position: absolute;
+}
+
+.relative {
+  position: relative;
+}
+
+.top-0 {
+  top: 0;
+}
+
+.left-0 {
+  left: 0;
+}
+
+.z-10 {
+  z-index: 10;
+}
+
+/* Spacing utilities */
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-3 {
+  margin-bottom: 0.75rem;
+}
+
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mt-6 {
+  margin-top: 1.5rem;
+}
+
+.ml-1 {
+  margin-left: 0.25rem;
+}
+
+/* Padding utilities */
+.pt-6 {
+  padding-top: 1.5rem;
+}
+
+.pt-8 {
+  padding-top: 2rem;
+}
+
+.pt-14 {
+  padding-top: 3.5rem;
+}
+
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.px-10 {
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+
+.pb-6 {
+  padding-bottom: 1.5rem;
+}
+
+/* Text utilities */
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.text-md {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
+.font-normal {
+  font-weight: 400;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+/* Text colors */
+.text-white {
+  color: white;
+}
+
+.text-primary {
+  color: #000000;
+}
+
+.text-secondary {
+  color: #4a5568;
+}
+
+.text-accent {
+  color: #0e7490;
+}
+
+.text-tertiary {
+  color: #6b7280;
+}
+
+.text-muted {
+  color: #a0aec0;
+}
+
+/* Layout utilities */
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.items-center {
+  align-items: center;
+}
+
+/* Grid utilities */
+.grid {
+  display: grid;
+}
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.gap-y-0 {
+  row-gap: 0;
+}
+
+.gap-12 {
+  gap: 3rem;
+}
+
+/* Spacing utilities */
+.space-y-2 > * + * {
+  margin-top: 0.5rem;
+}
+
+/* Text decoration */
+.underline {
+  text-decoration: underline;
+}
+
+/* Profile picture sizing */
+.sidebar img,
+.profile-photo {
+  width: 8rem;
+  height: 8rem;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid white;
+}
+
+/* Sidebar styling */
+.sidebar {
+  color: white;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 33.333333%;
+}
+
+.sidebar .flex.justify-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
 
 /* Section headings (Summary, Experience, Skills) */
 h2.text-2xl.font-bold {
@@ -85,22 +301,6 @@ h2.text-2xl.font-bold {
 /* Add spacing between Summary and Skills sections */
 .markdown-content + h2.text-2xl.font-bold {
   margin-top: 1.5rem;
-}
-
-/* Increase padding between top dark bar and content */
-.pt-6 {
-  padding-top: 2.5rem !important;
-}
-
-/* Ensure proper page breaks for PDF generation */
-@media print {
-  .resume-content {
-    page-break-inside: avoid;
-  }
-
-  .page-break-line {
-    page-break-after: avoid;
-  }
 }
 
 /* Markdown content styling */
@@ -126,11 +326,6 @@ h2.text-2xl.font-bold {
   margin-bottom: 0.125rem;
 }
 
-/* Sidebar-specific markdown content styling */
-.text-white .markdown-content li {
-  margin-bottom: 0rem;
-}
-
 .markdown-content p {
   margin-bottom: 0.5rem;
 }
@@ -141,6 +336,42 @@ h2.text-2xl.font-bold {
 
 .markdown-content em {
   font-style: italic;
+}
+
+/* Sidebar-specific markdown content styling */
+.text-white .markdown-content li {
+  margin-bottom: 0rem;
+}
+
+/* Sidebar skills specific styling */
+.sidebar .markdown-content h1 {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  margin-top: 0;
+  color: inherit;
+}
+
+.sidebar .markdown-content h2 {
+  font-family: var(--font-heading);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  margin-top: 0;
+  color: inherit;
+}
+
+.sidebar .markdown-content h3,
+.sidebar .markdown-content h4,
+.sidebar .markdown-content h5,
+.sidebar .markdown-content h6 {
+  font-family: var(--font-heading);
+  font-size: 0.625rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  margin-top: 0;
+  color: inherit;
 }
 
 /* Markdown heading styles */
@@ -182,11 +413,6 @@ h2.text-2xl.font-bold {
   color: inherit;
 }
 
-/* Resume content container */
-.resume-content {
-  background: white;
-}
-
 /* Page break line styling */
 .page-break-line {
   border: none;
@@ -195,7 +421,22 @@ h2.text-2xl.font-bold {
   margin: 0.5rem 0;
 }
 
-/* Ensure proper spacing for PDF generation */
+/* Ensure proper page breaks for PDF generation */
+.resume-content {
+  page-break-inside: avoid;
+}
+
+.page-break-line {
+  page-break-after: avoid;
+}
+
+/* Force color printing */
+* {
+  -webkit-print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+/* Print media queries for PDF generation */
 @media print {
   body {
     margin: 0;
@@ -226,8 +467,190 @@ h2.text-2xl.font-bold {
     width: 66.666667% !important;
   }
 
-  /* Ensure content flows properly */
   .flex-1 {
     flex: 1 1 0% !important;
+  }
+
+  /* Ensure proper positioning in PDF */
+  .absolute {
+    position: absolute !important;
+  }
+
+  .relative {
+    position: relative !important;
+  }
+
+  .top-0 {
+    top: 0 !important;
+  }
+
+  .left-0 {
+    left: 0 !important;
+  }
+
+  .w-full {
+    width: 100% !important;
+  }
+
+  .h-4 {
+    height: 1rem !important;
+  }
+
+  .z-10 {
+    z-index: 10 !important;
+  }
+
+  /* Ensure proper spacing in PDF */
+  .pt-14 {
+    padding-top: 3.5rem !important;
+  }
+
+  .px-6 {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+
+  .pt-6 {
+    padding-top: 1.5rem !important;
+  }
+
+  .px-10 {
+    padding-left: 2.5rem !important;
+    padding-right: 2.5rem !important;
+  }
+
+  .text-4xl {
+    font-size: 2.25rem !important;
+    line-height: 2.5rem !important;
+  }
+
+  .text-2xl {
+    font-size: 1.5rem !important;
+    line-height: 2rem !important;
+  }
+
+  .text-sm {
+    font-size: 0.875rem !important;
+    line-height: 1.25rem !important;
+  }
+
+  .font-semibold {
+    font-weight: 600 !important;
+  }
+
+  .font-normal {
+    font-weight: 400 !important;
+  }
+
+  .mb-2 {
+    margin-bottom: 0.5rem !important;
+  }
+
+  .mb-3 {
+    margin-bottom: 0.75rem !important;
+  }
+
+  .mt-2 {
+    margin-top: 0.5rem !important;
+  }
+
+  .gap-12 {
+    gap: 3rem !important;
+  }
+
+  .space-y-2 > * + * {
+    margin-top: 0.5rem !important;
+  }
+
+  .items-center {
+    align-items: center !important;
+  }
+
+  .ml-1 {
+    margin-left: 0.25rem !important;
+  }
+
+  .underline {
+    text-decoration: underline !important;
+  }
+
+  .text-white {
+    color: white !important;
+  }
+
+  .font-bold {
+    font-weight: 700 !important;
+  }
+
+  .pt-8 {
+    padding-top: 2rem !important;
+  }
+
+  .text-md {
+    font-size: 1rem !important;
+    line-height: 1.5rem !important;
+  }
+
+  .text-base {
+    font-size: 1rem !important;
+    line-height: 1.5rem !important;
+  }
+
+  .font-medium {
+    font-weight: 500 !important;
+  }
+
+  .mt-4 {
+    margin-top: 1rem !important;
+  }
+
+  .mt-6 {
+    margin-top: 1.5rem !important;
+  }
+
+  .mt-1 {
+    margin-top: 0.25rem !important;
+  }
+
+  .justify-between {
+    justify-content: space-between !important;
+  }
+
+  .grid {
+    display: grid !important;
+  }
+
+  .grid-cols-1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+  }
+
+  .gap-y-0 {
+    row-gap: 0 !important;
+  }
+
+  /* Profile photo sizing for PDF */
+  .profile-photo {
+    width: 8rem !important;
+    height: 8rem !important;
+    object-fit: cover !important;
+    border-radius: 50% !important;
+    border: 4px solid white !important;
+  }
+
+  /* Layout utilities for PDF */
+  .justify-center {
+    justify-content: center !important;
+  }
+
+  /* Profile photo container styling for PDF */
+  .sidebar .flex.justify-center {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-bottom: 2rem !important;
+  }
+
+  .mb-8 {
+    margin-bottom: 2rem !important;
   }
 }
