@@ -20,7 +20,7 @@
     <div class="text-white relative flex flex-col w-1/3" style="background-color: {{styling.colors.primary}}">
       <div class="pt-14 px-6">
         <div class="flex justify-center mb-8">
-          <img src="{{#if (startsWith sidebar.photo 'data:')}}{{sidebar.photo}}{{else}}data/{{sidebar.photo}}{{/if}}" alt="Profile photo" class="w-32 rounded-full border-4 border-white">
+          <img src="{{#if (startsWith sidebar.photo 'data:')}}{{sidebar.photo}}{{else}}{{sidebar.photo}}{{/if}}" alt="Profile photo" class="w-32 rounded-full border-4 border-white">
         </div>
       </div>
 

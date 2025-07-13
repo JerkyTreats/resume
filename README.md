@@ -136,7 +136,7 @@ resume/
 ### Shared Assets
 - **Header**: Edit `data/shared/header.json` for contact info
 - **Styling**: Edit `data/shared/styling.json` for colors and layout
-- **Images**: Add to `data/shared/assets/` and reference in resume.json
+- **Images**: Add to `assets/shared/` and reference in resume.json
 
 ## Technical Implementation
 
@@ -166,7 +166,7 @@ resume/
 - Type checking and constraints
 
 ### File Path Patterns
-- Photo: `^shared/assets/.+\.(jpeg|jpg|png)$`
+- Photo: `^assets/shared/.+\.(jpeg|jpg|png)$`
 - Summary: `^summary/.+\.md$`
 - Skills: `^skills/.+\.md$`
 - Experience: `^experience/.+\.md$`

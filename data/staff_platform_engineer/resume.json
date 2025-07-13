@@ -1,7 +1,7 @@
 {
   "$schema": "../shared/schemas/resume-schema.json",
   "sidebar": {
-    "photo": "shared/assets/justin_green.jpeg",
+    "photo": "assets/shared/justin_green.jpeg",
     "summary": {
       "title": "SUMMARY",
       "markdownPath": "summary/summary.md"

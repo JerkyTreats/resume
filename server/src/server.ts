@@ -64,12 +64,10 @@ app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'dashboard', 'index.html'));
 });
 
-app.get('/resume', (req, res) => {
-  res.sendFile(path.join(process.cwd(), 'resume.html'));
-});
 
-// SSR Resume route (for dashboard links)
-app.get('/resume-ssr', async (req, res) => {
+
+// Resume route (server-side rendered)
+app.get('/resume', async (req, res) => {
   try {
     const { resumeType, template = 'default' } = req.query;
 

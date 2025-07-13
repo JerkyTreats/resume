@@ -177,7 +177,7 @@ export class CSSManager {
 
   private async loadLocalFontCSS(): Promise<string> {
     try {
-      const fontsDir = path.join(process.cwd(), 'server', 'src', 'assets', 'fonts');
+      const fontsDir = path.join(process.cwd(), 'assets', 'fonts');
       const fontFiles = [
         { name: 'Montserrat', file: 'montserrat-regular.ttf', weight: 400 },
         { name: 'Montserrat', file: 'montserrat-bold.ttf', weight: 600 },

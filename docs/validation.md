@@ -85,7 +85,7 @@ The resume schema enforces:
 - `main` object with `experience`
 
 ### File Path Patterns
-- Photo: `^shared/assets/.+\.(jpeg|jpg|png)$`
+- Photo: `^assets/shared/.+\.(jpeg|jpg|png)$`
 - Summary: `^summary/.+\.md$`
 - Skills: `^skills/.+\.md$`
 - Experience: `^experience/.+\.md$`

@@ -210,7 +210,7 @@ export class UnifiedTemplateEngine {
         typeof processedData.sidebar.photo === 'string' &&
         !processedData.sidebar.photo.startsWith('data:')) {
       const photoFilename = path.basename(processedData.sidebar.photo);
-      const photoPath = path.join(process.cwd(), 'data', 'shared', 'assets', photoFilename);
+      const photoPath = path.join(process.cwd(), 'assets', 'shared', photoFilename);
       const dataUri = await this.assetManager.embedImageAsBase64(photoPath);
       if (dataUri) {
         processedData.sidebar.photo = dataUri;

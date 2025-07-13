@@ -9,7 +9,7 @@
       "properties": {
         "photo": {
           "type": "string",
-          "pattern": "^shared/assets/.+\\.(jpeg|jpg|png)$"
+          "pattern": "^assets/shared/.+\\.(jpeg|jpg|png)$"
         },
         "summary": {
           "type": "object",
