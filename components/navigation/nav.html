@@ -15,6 +15,9 @@
           <span class="nav-icon">📄</span>
           Download PDF
         </button>
+        <button class="nav-link theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+          <span class="nav-icon">🌙</span>
+        </button>
       </div>
     </div>
   </div>
@@ -64,6 +67,23 @@ async function generatePDF() {
     // Restore button state
     button.innerHTML = originalText;
     button.disabled = false;
+  }
+}
+
+function toggleTheme() {
+  if (window.themeManager) {
+    window.themeManager.toggleTheme();
+  } else {
+    // Fallback if theme manager isn't loaded
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
+
+    // Update the icon
+    const themeToggle = document.querySelector('.theme-toggle .nav-icon');
+    if (themeToggle) {
+      themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    }
   }
 }
 </script>

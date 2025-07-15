@@ -14,7 +14,7 @@ class ThemeManager {
      */
     init() {
         this.applyTheme(this.theme);
-        this.createThemeToggle();
+        this.updateThemeToggle(this.theme);
         this.setupSystemPreferenceListener();
     }
 
@@ -59,58 +59,20 @@ class ThemeManager {
     }
 
     /**
-     * Create theme toggle button
-     */
-    createThemeToggle() {
-        // Check if toggle already exists
-        if (document.querySelector('.theme-toggle')) {
-            return;
-        }
-
-        const navLinks = document.querySelector('.nav-links');
-        if (!navLinks) {
-            return;
-        }
-
-        const toggleButton = document.createElement('button');
-        toggleButton.className = 'theme-toggle';
-        toggleButton.setAttribute('aria-label', 'Toggle dark mode');
-        toggleButton.innerHTML = this.getThemeIcon(this.theme);
-
-        toggleButton.addEventListener('click', () => {
-            this.toggleTheme();
-        });
-
-        navLinks.appendChild(toggleButton);
-    }
-
-    /**
      * Update theme toggle icon
      */
     updateThemeToggle(theme) {
-        const toggleButton = document.querySelector('.theme-toggle');
+        const toggleButton = document.querySelector('.theme-toggle .nav-icon');
         if (toggleButton) {
-            toggleButton.innerHTML = this.getThemeIcon(theme);
+            toggleButton.textContent = this.getThemeIcon(theme);
         }
     }
 
     /**
-     * Get SVG icon for theme
+     * Get emoji icon for theme
      */
     getThemeIcon(theme) {
-        if (theme === 'dark') {
-            return `
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-            `;
-        } else {
-            return `
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-            `;
-        }
+        return theme === 'dark' ? '☀️' : '🌙';
     }
 
     /**

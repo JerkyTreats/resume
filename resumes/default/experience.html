@@ -7,12 +7,12 @@
   <div class="{{#ifFirst @index}}mt-4{{else}}mt-6{{/ifFirst}}">
     <div class="flex justify-between">
       <div>
-        <h3 class="font-semibold text-md">{{title}}</h3>
+        <h3 class="font-semibold text-md" style="color: {{../styling.colors.textPrimary}}">{{title}}</h3>
         <p class="text-base font-medium" style="color: {{../styling.colors.textAccent}}">{{company}}</p>
       </div>
       <p class="text-sm">{{startDate}} – {{endDate}}</p>
     </div>
-    <div class="text-sm mt-1 markdown-content">{{{markdown content}}}</div>
+    <div class="text-sm mt-1 markdown-content" style="color: {{../styling.colors.textPrimary}}">{{{markdown content}}}</div>
   </div>
   {{/each}}
 </div>

@@ -3,12 +3,14 @@ import { ContentWrapper } from './content-wrapper';
 import { HTMLGenerator } from './html-generator';
 import { RenderedTemplate } from './unified-template-engine';
 import { TemplateContext } from './data-manager';
+import { AssetManager } from './asset-manager';
 
 export class ResumeComposer {
   private static instance: ResumeComposer;
   private resumeRenderer: ResumeRenderer;
   private contentWrapper: ContentWrapper;
   private htmlGenerator: HTMLGenerator;
+  private assetManager: AssetManager;
 
   static getInstance(): ResumeComposer {
     if (!ResumeComposer.instance) {
@@ -21,6 +23,7 @@ export class ResumeComposer {
     this.resumeRenderer = ResumeRenderer.getInstance();
     this.contentWrapper = ContentWrapper.getInstance();
     this.htmlGenerator = HTMLGenerator.getInstance();
+    this.assetManager = AssetManager.getInstance();
   }
 
   /**
@@ -48,6 +51,15 @@ export class ResumeComposer {
         viewport: 'width=device-width, initial-scale=1.0'
       },
       head: [
+        {
+          content: `<link rel="preconnect" href="https://fonts.googleapis.com">`
+        },
+        {
+          content: `<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>`
+        },
+        {
+          content: `<link href="${this.assetManager.getCombinedFontImportUrl()}" rel="stylesheet">`
+        },
         {
           content: `<link rel="stylesheet" href="${cssPaths.shared}">`
         },

@@ -103,7 +103,7 @@ export class DataManager {
   async loadResumeData(resumeType: string, context: TemplateContext): Promise<ResumeData> {
     const [header, styling, resumeData, markdownContent] = await Promise.all([
       this.loadHeader(),
-      this.loadStyling(),
+      this.loadStyling(context.template),
       this.loadResumeJsonData(resumeType),
       this.loadAllMarkdown(resumeType)
     ]);
@@ -133,16 +133,25 @@ export class DataManager {
   }
 
   /**
-   * Load shared styling data
+   * Load template-specific styling data
    */
-  async loadStyling(): Promise<StylingData> {
-    const stylingPath = path.join(process.cwd(), 'data', 'shared', 'styling.json');
+  async loadStyling(templateName: string = 'default'): Promise<StylingData> {
+    // First try template-specific styling
+    const templateStylingPath = path.join(process.cwd(), 'resumes', templateName, 'styling.json');
 
-    if (!fs.existsSync(stylingPath)) {
-      throw new Error(`Styling file not found: ${stylingPath}`);
+    if (fs.existsSync(templateStylingPath)) {
+      const stylingContent = await fs.promises.readFile(templateStylingPath, 'utf-8');
+      return JSON.parse(stylingContent);
     }
 
-    const stylingContent = await fs.promises.readFile(stylingPath, 'utf-8');
+    // Fallback to shared styling
+    const sharedStylingPath = path.join(process.cwd(), 'data', 'shared', 'styling.json');
+
+    if (!fs.existsSync(sharedStylingPath)) {
+      throw new Error(`Styling file not found: ${sharedStylingPath}`);
+    }
+
+    const stylingContent = await fs.promises.readFile(sharedStylingPath, 'utf-8');
     return JSON.parse(stylingContent);
   }
 

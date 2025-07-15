@@ -62,8 +62,8 @@ jobs:
         fi
 
         # Validate styling.json
-        echo "Validating data/shared/styling.json..."
-        if jq empty data/shared/styling.json; then
+            echo "Validating resumes/default/styling.json..."
+    if jq empty resumes/default/styling.json; then
           echo "✅ styling.json is valid JSON"
         else
           echo "❌ styling.json is invalid JSON"

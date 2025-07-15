@@ -135,7 +135,7 @@ resume/
 
 ### Shared Assets
 - **Header**: Edit `data/shared/header.json` for contact info
-- **Styling**: Edit `data/shared/styling.json` for colors and layout
+- **Styling**: Edit `resumes/default/styling.json` for template-specific colors and layout
 - **Images**: Add to `assets/shared/` and reference in resume.json
 
 ## Technical Implementation
