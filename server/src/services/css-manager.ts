@@ -1,6 +1,8 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import { CSSConfigManager } from '../config/css-config';
+import { TemplateConfigManager } from './template-config-manager';
+import { AssetProcessor } from './asset-processor';
 
 export interface CSSContext {
   forPDF: boolean;
@@ -22,6 +24,8 @@ export class CSSManager {
   private cssCache: Map<string, string> = new Map();
   private assemblyCache: Map<string, CSSAssembly> = new Map();
   private configManager: CSSConfigManager;
+  private templateConfigManager: TemplateConfigManager;
+  private assetProcessor: AssetProcessor;
 
   static getInstance(): CSSManager {
     if (!CSSManager.instance) {
@@ -32,6 +36,8 @@ export class CSSManager {
 
   constructor() {
     this.configManager = CSSConfigManager.getInstance();
+    this.templateConfigManager = TemplateConfigManager.getInstance();
+    this.assetProcessor = AssetProcessor.getInstance();
   }
 
   async getCompleteCSS(context: CSSContext = { forPDF: false }): Promise<string> {
@@ -126,41 +132,9 @@ export class CSSManager {
 
   private async loadPDFFontCSS(templateName: string = 'default'): Promise<string> {
     // PDF-only base64 font embedding - bulletproof, no fallbacks
-    const fontConfigPath = path.join(process.cwd(), 'resumes', templateName, 'fonts.json');
-
     try {
-      if (!fs.existsSync(fontConfigPath)) {
-        throw new Error(`Font configuration not found for template '${templateName}': ${fontConfigPath}`);
-      }
-
-      const fontConfig = JSON.parse(await fs.promises.readFile(fontConfigPath, 'utf-8'));
-      const fontsDir = path.join(process.cwd(), 'assets', 'fonts');
-      let fontCSS = '';
-
-      for (const font of fontConfig.fonts) {
-        for (const fontFile of font.files) {
-          const fontPath = path.join(fontsDir, fontFile.file);
-
-          if (!fs.existsSync(fontPath)) {
-            throw new Error(`Font file not found: ${fontPath}`);
-          }
-
-          const fontBuffer = await fs.promises.readFile(fontPath);
-          const base64 = fontBuffer.toString('base64');
-          const mimeType = fontFile.format === 'woff2' ? 'font/woff2' : 'font/truetype';
-
-          fontCSS += `
-@font-face {
-  font-family: '${font.name}';
-  src: url('data:${mimeType};base64,${base64}') format('${fontFile.format}');
-  font-weight: ${fontFile.weight};
-  font-style: ${fontFile.style};
-  font-display: swap;
-}`;
-        }
-      }
-
-      return fontCSS;
+      const fonts = await this.templateConfigManager.getTemplateFonts(templateName);
+      return await this.assetProcessor.embedFontsAsBase64(fonts);
     } catch (error) {
       throw new Error(`Failed to load fonts for template '${templateName}': ${error}`);
     }

@@ -3,21 +3,18 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { PDFDocument } from 'pdf-lib';
 import { PDFOptions, PDFGenerationResult, ResumeType } from '../types';
-import { UnifiedTemplateEngine } from './unified-template-engine';
+import { ResumeComposer } from './resume-composer';
 import { PDFConfigManager } from '../config/pdf-config';
-import { ContentWrapper } from './content-wrapper';
 
 export class PDFGenerator {
   private browser: Browser | null = null;
   private performanceMetrics: Map<string, number> = new Map();
-  private templateEngine: UnifiedTemplateEngine;
+  private resumeComposer: ResumeComposer;
   private pdfConfigManager: PDFConfigManager;
-  private contentWrapper: ContentWrapper;
 
   constructor() {
-    this.templateEngine = UnifiedTemplateEngine.getInstance();
+    this.resumeComposer = ResumeComposer.getInstance();
     this.pdfConfigManager = PDFConfigManager.getInstance();
-    this.contentWrapper = ContentWrapper.getInstance();
   }
 
   async initialize(): Promise<void> {
@@ -66,15 +63,11 @@ export class PDFGenerator {
       await page.setViewport(renderingConfig.viewport);
       await page.setUserAgent(renderingConfig.userAgent);
 
-      // Use unified template engine
-      const renderedResume = await this.templateEngine.renderResume(resumeType, 'default', {
-        forPDF: true,
+      // Use resume composer for PDF generation
+      const completeHTML = await this.resumeComposer.composeForPDF(resumeType, 'default', {
         includeFonts: true,
         includeIcons: true
       });
-
-      // Create complete HTML with inline CSS using ContentWrapper
-      const completeHTML = await this.contentWrapper.wrapForPDF(renderedResume);
 
       // Set content directly instead of navigating to URL
       await page.setContent(completeHTML, {

@@ -1,10 +1,8 @@
 import { Router, Request, Response } from 'express';
-import { ResumeRenderer } from '../services/resume-renderer';
-import { UnifiedTemplateEngine } from '../services/unified-template-engine';
+import { ResumeComposer } from '../services/resume-composer';
 
 const router = Router();
-const resumeRenderer = new ResumeRenderer();
-const templateEngine = UnifiedTemplateEngine.getInstance();
+const resumeComposer = ResumeComposer.getInstance();
 
 // GET /api/render-resume
 // Renders a resume using server-side Handlebars templating
@@ -21,7 +19,7 @@ router.get('/render-resume', async (req: Request, res: Response): Promise<void> 
     }
 
     // Validate resume type exists
-    const availableTypes = await resumeRenderer.getAvailableResumeTypes();
+    const availableTypes = await resumeComposer.getAvailableResumeTypes();
     if (!availableTypes.includes(resumeType)) {
       res.status(400).json({
         success: false,
@@ -31,7 +29,7 @@ router.get('/render-resume', async (req: Request, res: Response): Promise<void> 
     }
 
     // Validate template exists
-    const availableTemplates = await resumeRenderer.getAvailableTemplates();
+    const availableTemplates = await resumeComposer.getAvailableTemplates();
     if (!availableTemplates.includes(template as string)) {
       res.status(400).json({
         success: false,
@@ -41,7 +39,7 @@ router.get('/render-resume', async (req: Request, res: Response): Promise<void> 
     }
 
     // Render the resume
-    const renderedResume = await resumeRenderer.renderResume(resumeType, template as string);
+    const renderedResume = await resumeComposer.composeForAPI(resumeType, template as string);
 
     res.json({
       success: true,
@@ -79,7 +77,7 @@ router.get('/resume-ssr', async (req: Request, res: Response): Promise<void> => 
     }
 
     // Validate resume type exists
-    const availableTypes = await resumeRenderer.getAvailableResumeTypes();
+    const availableTypes = await resumeComposer.getAvailableResumeTypes();
     if (!availableTypes.includes(resumeType)) {
       res.status(400).send(`
         <html>
@@ -94,7 +92,7 @@ router.get('/resume-ssr', async (req: Request, res: Response): Promise<void> => 
     }
 
     // Validate template exists
-    const availableTemplates = await resumeRenderer.getAvailableTemplates();
+    const availableTemplates = await resumeComposer.getAvailableTemplates();
     if (!availableTemplates.includes(template as string)) {
       res.status(400).send(`
         <html>
@@ -108,12 +106,12 @@ router.get('/resume-ssr', async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    // Render the resume
-    const renderedResume = await resumeRenderer.renderResume(resumeType, template as string);
+    // Compose resume for browser viewing
+    const browserHTML = await resumeComposer.composeForBrowser(resumeType, template as string);
 
     // Send as HTML page
     res.setHeader('Content-Type', 'text/html');
-    res.send(renderedResume.html);
+    res.send(browserHTML);
 
   } catch (error) {
     console.error('Resume rendering error:', error);
@@ -133,7 +131,7 @@ router.get('/resume-ssr', async (req: Request, res: Response): Promise<void> => 
 // Returns list of available resume types
 router.get('/available-resume-types', async (req: Request, res: Response) => {
   try {
-    const types = await resumeRenderer.getAvailableResumeTypes();
+    const types = await resumeComposer.getAvailableResumeTypes();
     res.json({
       success: true,
       types
@@ -151,7 +149,7 @@ router.get('/available-resume-types', async (req: Request, res: Response) => {
 // Returns list of available templates
 router.get('/available-templates', async (req: Request, res: Response) => {
   try {
-    const templates = await resumeRenderer.getAvailableTemplates();
+    const templates = await resumeComposer.getAvailableTemplates();
     res.json({
       success: true,
       templates
@@ -169,7 +167,7 @@ router.get('/available-templates', async (req: Request, res: Response) => {
 // Clears the template cache
 router.post('/clear-template-cache', async (req: Request, res: Response) => {
   try {
-    templateEngine.clearCache();
+    resumeComposer.clearCache();
     res.json({
       success: true,
       message: 'Template cache cleared successfully'

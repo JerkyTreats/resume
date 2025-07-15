@@ -85,13 +85,11 @@ app.get('/resume', async (req, res) => {
     }
 
     // Import the necessary services
-    const { UnifiedTemplateEngine } = await import('./services/unified-template-engine');
-    const { ContentWrapper } = await import('./services/content-wrapper');
-    const templateEngine = UnifiedTemplateEngine.getInstance();
-    const contentWrapper = ContentWrapper.getInstance();
+    const { ResumeComposer } = await import('./services/resume-composer');
+    const resumeComposer = ResumeComposer.getInstance();
 
     // Validate resume type exists
-    const availableTypes = await templateEngine.getAvailableResumeTypes();
+    const availableTypes = await resumeComposer.getAvailableResumeTypes();
     if (!availableTypes.includes(resumeType)) {
       res.status(400).send(`
         <html>
@@ -106,7 +104,7 @@ app.get('/resume', async (req, res) => {
     }
 
     // Validate template exists
-    const availableTemplates = await templateEngine.getAvailableTemplates();
+    const availableTemplates = await resumeComposer.getAvailableTemplates();
     if (!availableTemplates.includes(template as string)) {
       res.status(400).send(`
         <html>
@@ -120,11 +118,8 @@ app.get('/resume', async (req, res) => {
       return;
     }
 
-    // Render the resume for browser (with navigation)
-    const renderedResume = await templateEngine.renderResume(resumeType, template as string, { forPDF: false });
-
-    // Wrap with browser navigation
-    const browserHTML = await contentWrapper.wrapForBrowser(renderedResume);
+    // Compose resume for browser viewing (with navigation)
+    const browserHTML = await resumeComposer.composeForBrowser(resumeType, template as string);
 
     // Send as HTML page with navigation
     res.setHeader('Content-Type', 'text/html');

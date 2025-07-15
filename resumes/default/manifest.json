@@ -1,0 +1,49 @@
+{
+  "template": "default",
+  "version": "1.0.0",
+  "css": {
+    "shared": "styles/shared.css",
+    "template": "resumes/styles/default.css"
+  },
+  "fonts": [
+    {
+      "name": "Montserrat",
+      "files": [
+        {
+          "weight": 400,
+          "style": "normal",
+          "file": "montserrat-regular.woff2",
+          "format": "woff2"
+        },
+        {
+          "weight": 600,
+          "style": "normal",
+          "file": "montserrat-bold.woff2",
+          "format": "woff2"
+        }
+      ]
+    },
+    {
+      "name": "Lato",
+      "files": [
+        {
+          "weight": 400,
+          "style": "normal",
+          "file": "lato-regular.ttf",
+          "format": "truetype"
+        },
+        {
+          "weight": 700,
+          "style": "normal",
+          "file": "lato-bold.ttf",
+          "format": "truetype"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "description": "Default resume template with embedded fonts",
+    "author": "Resume System",
+    "created": "2024-01-01"
+  }
+}
